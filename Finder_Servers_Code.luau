@@ -300,7 +300,7 @@ mainFrame.BorderSizePixel = 0
 
 -- Détection des Screen 
 
-if isMobile or SCREEN_SIZE.X < 800 then
+if isOnMobile or SCREEN_SIZE.X < 800 then
 	mainFrame.Size = UDim2.new(0, 800, 0, 600)
 else
 	mainFrame.Size = UDim2.new(0, 650, 0, 500)
