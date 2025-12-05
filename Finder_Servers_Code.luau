@@ -80,7 +80,7 @@ bar.BackgroundColor3 = Color3.fromRGB(180,180,180)
 bar.BorderSizePixel = 0
 Instance.new("UICorner", bar).CornerRadius = UDim.new(0,4)
 
--- TEXTE EN BAS À DROITE
+
 local credit = Instance.new("TextLabel", main)
 credit.BackgroundTransparency = 1
 credit.Size = UDim2.new(0,200,0,20)
