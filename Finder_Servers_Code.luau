@@ -49,14 +49,14 @@ title.TextSize = 40
 title.TextColor3 = Color3.fromRGB(240,240,240)
 title.Text = "Server Finder Deluxe"
 
-local sub = Instance.new("TextLabel", main)
-sub.BackgroundTransparency = 1
-sub.Size = UDim2.new(1,0,0,30)
-sub.Position = UDim2.new(0,0,0,65)
-sub.Font = Enum.Font.GothamMedium
-sub.TextSize = 20
-sub.TextColor3 = Color3.fromRGB(200,200,200)
-sub.Text = "Ultimate Server Scanner"
+local versionLabel = Instance.new("TextLabel", main)
+versionLabel.BackgroundTransparency = 1
+versionLabel.Size = UDim2.new(1,0,0,20)
+versionLabel.Position = UDim2.new(0,0,0,85)
+versionLabel.Font = Enum.Font.GothamMedium
+versionLabel.TextSize = 16
+versionLabel.TextColor3 = Color3.fromRGB(210,210,210)
+versionLabel.Text = "Ultimate Server Scanner"
 
 local status = Instance.new("TextLabel", main)
 status.BackgroundTransparency = 1
@@ -80,7 +80,6 @@ bar.BackgroundColor3 = Color3.fromRGB(180,180,180)
 bar.BorderSizePixel = 0
 Instance.new("UICorner", bar).CornerRadius = UDim.new(0,4)
 
-
 local credit = Instance.new("TextLabel", main)
 credit.BackgroundTransparency = 1
 credit.Size = UDim2.new(0,200,0,20)
@@ -91,9 +90,78 @@ credit.TextColor3 = Color3.fromRGB(170,170,170)
 credit.TextXAlignment = Enum.TextXAlignment.Right
 credit.Text = "By MaxproGlitcher"
 
+local isXmas, isHalloween, isNewYear, isEaster, isValentine = false,false,false,false,false
+
+pcall(function()
+	local date = os.date("*t")
+	isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
+	isHalloween = (date.month == 10 and date.day >= 23) or (date.month == 11 and date.day <= 1)
+	isNewYear = (date.month == 12 and date.day >= 30) or (date.month == 1 and date.day <= 2)
+	isEaster = (date.month == 3 and date.day >= 31) or (date.month == 4 and date.day <= 15)
+	isValentine = (date.month == 2 and date.day == 14)
+end)
+
+
+local function decorate(startEmoji, endEmoji)
+	title.Text = startEmoji.." Server Finder Deluxe "..endEmoji
+	title.TextSize = 32
+	title.Position = UDim2.new(0,0,0,5)
+end
+
+local function cycle(colors)
+	local i = 1
+	task.spawn(function()
+		while gui.Parent do
+			local c = colors[i]
+			title.TextColor3 = c
+			versionLabel.TextColor3 = c
+			status.TextColor3 = c
+			credit.TextColor3 = c
+			bar.BackgroundColor3 = c
+			i = i % #colors + 1
+			task.wait(0.5)
+		end
+	end)
+end
+
+if isXmas then
+	decorate("🎄","🎄")
+	cycle({
+		Color3.fromRGB(0,255,0), 
+		Color3.fromRGB(255,0,0), 
+		Color3.fromRGB(255,255,255)})
+elseif isHalloween then
+	decorate("🎃","🎃")
+	cycle({
+		Color3.fromRGB(0,0,0), 
+		Color3.fromRGB(255,165,0)})
+elseif isNewYear then
+	decorate("🎉","🎉")
+	cycle({
+		Color3.fromRGB(255,255,0), 
+		Color3.fromRGB(0,0,0)})
+elseif isEaster then
+	decorate("🐰","🐰")
+	cycle({
+		Color3.fromRGB(216,191,216), 
+		Color3.fromRGB(255,182,193), 
+		Color3.fromRGB(193,225,193), 
+		Color3.fromRGB(173,216,230)})
+elseif isValentine then
+	decorate("💗","💗")
+	cycle({
+		Color3.fromRGB(0,0,0), 
+		Color3.fromRGB(255,85,127)})
+else
+	title.TextColor3 = Color3.fromRGB(240,240,240)
+	versionLabel.TextColor3 = Color3.fromRGB(200,200,200)
+	status.TextColor3 = Color3.fromRGB(200,200,200)
+	credit.TextColor3 = Color3.fromRGB(170,170,170)
+	bar.BackgroundColor3 = Color3.fromRGB(180,180,180)
+end
+
 bar:TweenSize(UDim2.new(1,0,1,0), "Out", "Quad", 2, true)
 task.wait(2)
-
 status.Text = "Success"
 task.wait(0.8)
 
@@ -635,7 +703,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v4.8"
+versionLabel.Text = "v4.9"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1776,7 +1844,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "4.8"
+local version = "4.9"
 
 local translations = {
 	fr = {
@@ -1849,3 +1917,4 @@ Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
