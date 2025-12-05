@@ -1,6 +1,6 @@
 --[[By MaxproGlitcher Discord:maxproglitcher
 
--- Site Web official: https://github.com/MaxproGlitcher/Finds-Servers
+-- Site Web official: https://github.com/MaxproGlitcher/Server-Finder-Deluxe
    
    _____                                       ________.__  .__  __         .__                  
   /     \ _____  ___  ________________  ____  /  _____/|  | |__|/  |_  ____ |  |__   ___________ 
@@ -27,52 +27,79 @@
 -- chargement du Gui
 
 local gui = Instance.new("ScreenGui", game.CoreGui)
-local RejoinButton = Instance.new("ImageButton")
 gui.IgnoreGuiInset = true
 gui.ResetOnSpawn = false
 
-local background = Instance.new("Frame", gui)
-background.Size = UDim2.new(1, 0, 1, 0)
-background.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-background.BackgroundTransparency = 0.2
+local blur = Instance.new("BlurEffect", game.Lighting)
+blur.Size = 12
 
-local label = Instance.new("TextLabel", background)
-label.Size = UDim2.new(0, 250, 0, 50)
-label.Position = UDim2.new(0.5, -125, 0.5, -80)
-label.BackgroundTransparency = 1
-label.Text = "Loading..."
-label.TextColor3 = Color3.fromRGB(255, 255, 255)
-label.Font = Enum.Font.GothamBold
-label.TextSize = 26
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 420, 0, 260)
+main.Position = UDim2.new(0.5, -210, 0.5, -130)
+main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+main.BorderSizePixel = 0
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
 
-local barFrame = Instance.new("Frame", background)
-barFrame.Size = UDim2.new(0, 300, 0, 14)
-barFrame.Position = UDim2.new(0.5, -150, 0.5, -20)
-barFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-barFrame.BorderSizePixel = 0
+local title = Instance.new("TextLabel", main)
+title.BackgroundTransparency = 1
+title.Size = UDim2.new(1,0,0,50)
+title.Position = UDim2.new(0,0,0,15)
+title.Font = Enum.Font.GothamBlack
+title.TextSize = 40
+title.TextColor3 = Color3.fromRGB(240,240,240)
+title.Text = "Server Finder Deluxe"
 
-Instance.new("UICorner", barFrame).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", barFrame).Color = Color3.fromRGB(80, 80, 80)
+local sub = Instance.new("TextLabel", main)
+sub.BackgroundTransparency = 1
+sub.Size = UDim2.new(1,0,0,30)
+sub.Position = UDim2.new(0,0,0,65)
+sub.Font = Enum.Font.GothamMedium
+sub.TextSize = 20
+sub.TextColor3 = Color3.fromRGB(200,200,200)
+sub.Text = "Ultimate Server Scanner"
 
-local bar = Instance.new("Frame", barFrame)
-bar.Size = UDim2.new(0, 0, 1, 0)
-bar.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
+local status = Instance.new("TextLabel", main)
+status.BackgroundTransparency = 1
+status.Size = UDim2.new(1,0,0,30)
+status.Position = UDim2.new(0,0,0,130)
+status.Font = Enum.Font.Gotham
+status.TextSize = 18
+status.TextColor3 = Color3.fromRGB(200,200,200)
+status.Text = "Loading..."
+
+local barBack = Instance.new("Frame", main)
+barBack.Size = UDim2.new(0,280,0,8)
+barBack.Position = UDim2.new(0.5,-140,0,170)
+barBack.BackgroundColor3 = Color3.fromRGB(60,60,60)
+barBack.BorderSizePixel = 0
+Instance.new("UICorner", barBack).CornerRadius = UDim.new(0,4)
+
+local bar = Instance.new("Frame", barBack)
+bar.Size = UDim2.new(0,0,1,0)
+bar.BackgroundColor3 = Color3.fromRGB(180,180,180)
 bar.BorderSizePixel = 0
+Instance.new("UICorner", bar).CornerRadius = UDim.new(0,4)
 
-Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 8)
+-- TEXTE EN BAS À DROITE
+local credit = Instance.new("TextLabel", main)
+credit.BackgroundTransparency = 1
+credit.Size = UDim2.new(0,200,0,20)
+credit.Position = UDim2.new(1,-210,1,-30)
+credit.Font = Enum.Font.Gotham
+credit.TextSize = 16
+credit.TextColor3 = Color3.fromRGB(170,170,170)
+credit.TextXAlignment = Enum.TextXAlignment.Right
+credit.Text = "By MaxproGlitcher"
 
-bar:TweenSize(UDim2.new(1, 0, 1, 0), "Out", "Quad", 2, true)
-task.wait(2.2)
+bar:TweenSize(UDim2.new(1,0,1,0), "Out", "Quad", 2, true)
+task.wait(2)
 
-label.Text = "Server Finder Deluxe!!!"
+status.Text = "Success"
+task.wait(0.8)
 
-task.wait(2.2)
-
-label.Text = "Success!!!"
-label.TextColor3 = Color3.fromRGB(200, 200, 200)
-task.wait(1.2)
-
+blur:Destroy()
 gui:Destroy()
+
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -96,7 +123,7 @@ getgenv().NextServer = nil
 getgenv().HasScannedAll = false
 
 
-
+-- Services
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
@@ -436,14 +463,14 @@ local holidayTexts = {
 	}
 }
 
--- 🌐 Fonction pour obtenir le message traduit
+
 local function getHolidayMessage(eventKey)
 	local langCode = (LocalizationService.RobloxLocaleId or "en"):sub(1,2)
 	local eventTable = holidayTexts[eventKey]
 	return eventTable and (eventTable[langCode] or eventTable["en"]) or "Happy holidays! 🎉"
 end
 
--- 🧭 Librairie Notification
+
 local NotificationLib = {
 	_notifications = {},
 	_theme = {
@@ -608,7 +635,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v4.7"
+versionLabel.Text = "v4.8"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1749,7 +1776,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "4.7"
+local version = "4.8"
 
 local translations = {
 	fr = {
@@ -1821,4 +1848,4 @@ Modules.print("Grey", msg.line, 20)
 Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
 
----------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
