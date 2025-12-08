@@ -15,6 +15,8 @@ The script allows you to be able to change servers without the need to click on 
 
 The Server Finder Deluxe script you are using is open source to show you a preview of the script that has been created and allows you to see that there is nothing malicious about it compared to many competitors who use script obfuscation. 
 
+Server Finder also has a theme events system to create a festive atmosphere for a better user experience, such as Halloween, Christmas, New Year's Eve, Valentine's Day, and Easter. 
+
 # Option Custom 🔧
 The Deluxe Servers also allow you to obtain links to the servers you are on or simply another proposed server and add it in your web browser console, making it easy if you want to send it to your friends or as an alternative account.
 
