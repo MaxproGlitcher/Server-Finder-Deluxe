@@ -17,6 +17,10 @@ The Server Finder Deluxe script you are using is open source to show you a previ
 
 Server Finder also has a theme events system to create a festive atmosphere for a better user experience, such as Halloween, Christmas, New Year's Eve, Valentine's Day, and Easter. 
 
+If you are banned for using the script, I am not responsible when you exploit it. You know the risks that come with it, such as being banned or having your account terminated. I shouldn't have to repeat this, but I will. Please always use a secondary account when you exploit it, otherwise you know the consequences that will result. 
+
+Servers Finder can be used on all Roblox games, but it does not bypass any specialized anti-cheat systems. It is not really possible to design workarounds for all games. Use at your own risk and enjoy Server Finder Deluxe. Please add stars⭐to the script to help me gain visibility. 
+
 # Option Custom 🔧
 The Deluxe Servers also allow you to obtain links to the servers you are on or simply another proposed server and add it in your web browser console, making it easy if you want to send it to your friends or as an alternative account.
 
