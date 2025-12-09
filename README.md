@@ -22,7 +22,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Server
 - Servers Finder can be used on all Roblox games, but it does not bypass any specialized anti-cheat systems. It is not really possible to design workarounds for all games. Use at your own risk and enjoy Server Finder Deluxe. Please add stars⭐to the script to help me gain visibility. 
 
 # Option Custom 🔧
-The Deluxe Servers also allow you to obtain links to the servers you are on or simply another proposed server and add it in your web browser console, making it easy if you want to send it to your friends or as an alternative account.
+- The Deluxe Servers also allow you to obtain links to the servers you are on or simply another proposed server and add it in your web browser console, making it easy if you want to send it to your friends or as an alternative account.
 
 # To join a servers, just click on join its very easy !!!🖱️⬇️
 <img width="968" height="710" alt="Image" src="https://github.com/user-attachments/assets/369c6e8c-d66e-4435-b320-13963067679d" />
