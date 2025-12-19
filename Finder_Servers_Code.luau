@@ -206,9 +206,8 @@ if not camera then
 	repeat task.wait() camera = workspace.CurrentCamera until camera
 end
 local SCREEN_SIZE = camera.ViewportSize
-
-local IsOnMobile = table.find({Enum.Platform.IOS, Enum.Platform.Android}, game:GetService("UserInputService"):GetPlatform())
 local IsOnMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+local IsOnMobile = table.find({Enum.Platform.IOS, Enum.Platform.Android}, game:GetService("UserInputService"):GetPlatform())
 VREnabled = game:GetService("VRService").VREnabled
 
 queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
@@ -675,15 +674,18 @@ NotificationLib:Notify({
 
 -- protection lors du screen shot le Gui deviendras invisible lors du screen shot
 
-local CaptureService = game:GetService("CaptureService")
-CaptureService.CaptureBegan:Connect(function()
-    screenGui.Enabled = false
-end)
+pcall(function()
+	local CaptureService = game:GetService("CaptureService")
 
-CaptureService.CaptureEnded:Connect(function()
-    task.delay(0.5, function()
-        screenGui.Enabled = true
-    end)
+	CaptureService.CaptureBegan:Connect(function()
+		screenGui.Enabled = false
+	end)
+
+	CaptureService.CaptureEnded:Connect(function()
+		task.delay(0.5, function()
+			screenGui.Enabled = true
+		end)
+	end)
 end)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1917,4 +1919,5 @@ Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
