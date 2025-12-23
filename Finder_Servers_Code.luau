@@ -24,73 +24,94 @@
 ]]
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- chargement du Gui
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local CoreGui = game:GetService("CoreGui")
 
 local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Parent = CoreGui
 gui.IgnoreGuiInset = true
 gui.ResetOnSpawn = false
 
-local blur = Instance.new("BlurEffect", game.Lighting)
+local blur = Instance.new("BlurEffect")
+blur.Parent = Lighting
 blur.Size = 12
 
-local main = Instance.new("Frame", gui)
+local main = Instance.new("Frame")
+main.Parent = gui
 main.Size = UDim2.new(0, 420, 0, 260)
 main.Position = UDim2.new(0.5, -210, 0.5, -130)
 main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 main.BorderSizePixel = 0
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
 
-local title = Instance.new("TextLabel", main)
+local title = Instance.new("TextLabel")
+title.Parent = main
 title.BackgroundTransparency = 1
-title.Size = UDim2.new(1,0,0,50)
-title.Position = UDim2.new(0,0,0,15)
+title.Size = UDim2.new(1, 0, 0, 50)
+title.Position = UDim2.new(0, 0, 0, 10)
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 40
-title.TextColor3 = Color3.fromRGB(240,240,240)
+title.TextColor3 = Color3.fromRGB(240, 240, 240)
 title.Text = "Server Finder Deluxe"
 
-local versionLabel = Instance.new("TextLabel", main)
+local versionLabel = Instance.new("TextLabel")
+versionLabel.Parent = main
 versionLabel.BackgroundTransparency = 1
-versionLabel.Size = UDim2.new(1,0,0,20)
-versionLabel.Position = UDim2.new(0,0,0,85)
+versionLabel.Size = UDim2.new(1, 0, 0, 20)
+versionLabel.Position = UDim2.new(0, 0, 0, 70)
 versionLabel.Font = Enum.Font.GothamMedium
 versionLabel.TextSize = 16
-versionLabel.TextColor3 = Color3.fromRGB(210,210,210)
+versionLabel.TextColor3 = Color3.fromRGB(210, 210, 210)
 versionLabel.Text = "Ultimate Server Scanner"
 
-local status = Instance.new("TextLabel", main)
+local status = Instance.new("TextLabel")
+status.Parent = main
 status.BackgroundTransparency = 1
-status.Size = UDim2.new(1,0,0,30)
-status.Position = UDim2.new(0,0,0,130)
+status.Size = UDim2.new(1, 0, 0, 30)
+status.Position = UDim2.new(0, 0, 0, 105)
 status.Font = Enum.Font.Gotham
 status.TextSize = 18
-status.TextColor3 = Color3.fromRGB(200,200,200)
+status.TextColor3 = Color3.fromRGB(200, 200, 200)
 status.Text = "Loading..."
 
-local barBack = Instance.new("Frame", main)
-barBack.Size = UDim2.new(0,280,0,8)
-barBack.Position = UDim2.new(0.5,-140,0,170)
-barBack.BackgroundColor3 = Color3.fromRGB(60,60,60)
+local percent = Instance.new("TextLabel")
+percent.Parent = main
+percent.BackgroundTransparency = 1
+percent.Size = UDim2.new(1, 0, 0, 25)
+percent.Position = UDim2.new(0, 0, 0, 135)
+percent.Font = Enum.Font.GothamBold
+percent.TextSize = 20
+percent.TextColor3 = Color3.fromRGB(200, 200, 200)
+percent.Text = "0%"
+
+local barBack = Instance.new("Frame")
+barBack.Parent = main
+barBack.Size = UDim2.new(0, 280, 0, 8)
+barBack.Position = UDim2.new(0.5, -140, 0, 165)
+barBack.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 barBack.BorderSizePixel = 0
-Instance.new("UICorner", barBack).CornerRadius = UDim.new(0,4)
+Instance.new("UICorner", barBack).CornerRadius = UDim.new(0, 4)
 
-local bar = Instance.new("Frame", barBack)
-bar.Size = UDim2.new(0,0,1,0)
-bar.BackgroundColor3 = Color3.fromRGB(180,180,180)
+local bar = Instance.new("Frame")
+bar.Parent = barBack
+bar.Size = UDim2.new(0, 0, 1, 0)
+bar.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
 bar.BorderSizePixel = 0
-Instance.new("UICorner", bar).CornerRadius = UDim.new(0,4)
+Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 4)
 
-local credit = Instance.new("TextLabel", main)
+local credit = Instance.new("TextLabel")
+credit.Parent = main
 credit.BackgroundTransparency = 1
-credit.Size = UDim2.new(0,200,0,20)
-credit.Position = UDim2.new(1,-210,1,-30)
+credit.Size = UDim2.new(0, 200, 0, 20)
+credit.Position = UDim2.new(1, -210, 1, -30)
 credit.Font = Enum.Font.Gotham
 credit.TextSize = 16
-credit.TextColor3 = Color3.fromRGB(170,170,170)
+credit.TextColor3 = Color3.fromRGB(170, 170, 170)
 credit.TextXAlignment = Enum.TextXAlignment.Right
 credit.Text = "By MaxproGlitcher"
 
-local isXmas, isHalloween, isNewYear, isEaster, isValentine = false,false,false,false,false
+local isXmas, isHalloween, isNewYear, isEaster, isValentine = false, false, false, false, false
 
 pcall(function()
 	local date = os.date("*t")
@@ -101,11 +122,9 @@ pcall(function()
 	isValentine = (date.month == 2 and date.day == 14)
 end)
 
-
 local function decorate(startEmoji, endEmoji)
-	title.Text = startEmoji.." Server Finder Deluxe "..endEmoji
+	title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
 	title.TextSize = 32
-	title.Position = UDim2.new(0,0,0,5)
 end
 
 local function cycle(colors)
@@ -118,6 +137,7 @@ local function cycle(colors)
 			status.TextColor3 = c
 			credit.TextColor3 = c
 			bar.BackgroundColor3 = c
+			percent.TextColor3 = c
 			i = i % #colors + 1
 			task.wait(0.5)
 		end
@@ -125,66 +145,74 @@ local function cycle(colors)
 end
 
 if isXmas then
-	decorate("🎄","🎄")
+	decorate("🎄", "🎄")
 	cycle({
 		Color3.fromRGB(0,255,0), 
 		Color3.fromRGB(255,0,0), 
 		Color3.fromRGB(255,255,255)})
 elseif isHalloween then
-	decorate("🎃","🎃")
+	decorate("🎃", "🎃")
 	cycle({
 		Color3.fromRGB(0,0,0), 
 		Color3.fromRGB(255,165,0)})
 elseif isNewYear then
-	decorate("🎉","🎉")
+	decorate("🎉", "🎉")
 	cycle({
 		Color3.fromRGB(255,255,0), 
 		Color3.fromRGB(0,0,0)})
 elseif isEaster then
-	decorate("🐰","🐰")
+	decorate("🐰", "🐰")
 	cycle({
-		Color3.fromRGB(216,191,216), 
-		Color3.fromRGB(255,182,193), 
-		Color3.fromRGB(193,225,193), 
-		Color3.fromRGB(173,216,230)})
+		Color3.fromRGB(216,191,216),
+		Color3.fromRGB(255,182,193),
+		Color3.fromRGB(193,225,193),
+		Color3.fromRGB(173,216,230)
+	})
 elseif isValentine then
-	decorate("💗","💗")
+	decorate("💗", "💗")
 	cycle({
 		Color3.fromRGB(0,0,0), 
 		Color3.fromRGB(255,85,127)})
-else
-	title.TextColor3 = Color3.fromRGB(240,240,240)
-	versionLabel.TextColor3 = Color3.fromRGB(200,200,200)
-	status.TextColor3 = Color3.fromRGB(200,200,200)
-	credit.TextColor3 = Color3.fromRGB(170,170,170)
-	bar.BackgroundColor3 = Color3.fromRGB(180,180,180)
 end
 
-bar:TweenSize(UDim2.new(1,0,1,0), "Out", "Quad", 2, true)
-task.wait(2)
+-- Animation
+local duration = 2
+TweenService:Create(bar, TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+	Size = UDim2.new(1, 0, 1, 0)
+}):Play()
+
+for i = 0, 100 do
+	percent.Text = i .. "%"
+	task.wait(duration / 100)
+end
+
 status.Text = "Success"
 task.wait(0.8)
 
-blur:Destroy()
-gui:Destroy()
+if blur then
+	blur:Destroy()
+end
 
+if gui then
+	gui:Destroy()
+end
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Compatibilité getgenv
 
 if game:GetService("CoreGui"):FindFirstChild("incognito") then
-    oldstring = loadstring
-    getfenv().loadstring = function(code)
-        local source = code
-        source = source:gsub("(%a+)%s*([%+%-%*/])=%s*", "%1 = %1 %2 ")
-        return oldstring(source)
-    end
+	oldstring = loadstring
+	getfenv().loadstring = function(code)
+		local source = code
+		source = source:gsub("(%a+)%s*([%+%-%*/])=%s*", "%1 = %1 %2 ")
+		return oldstring(source)
+	end
 end
 if not getgenv then
-    getfenv().getgenv = function(layer)
-        return getfenv(layer)
-    end
+	getfenv().getgenv = function(layer)
+		return getfenv(layer)
+	end
 end
 
 getgenv().NextServer = nil
@@ -221,15 +249,15 @@ local TweenService = game:GetService("TweenService")
 
 local requestFunc = nil
 if syn and syn.request then
-    requestFunc = syn.request
+	requestFunc = syn.request
 elseif http and http.request then
-    requestFunc = http.request
+	requestFunc = http.request
 elseif http_request then
-    requestFunc = http_request
+	requestFunc = http_request
 elseif fluxus and fluxus.request then
-    requestFunc = fluxus.request
+	requestFunc = fluxus.request
 elseif request then
-    requestFunc = request
+	requestFunc = request
 end
 
 
@@ -256,113 +284,113 @@ end
 
 
 local NotificationLib = {
-    _notifications = {},
-    _theme = {
-        primaryColor = Color3.fromRGB(30,30,30),
-        textColor = Color3.fromRGB(255,255,255),
-        font = Enum.Font.GothamSemibold,
-        cornerRadius = UDim.new(0,8)
-    },
-    _settings = {
-        duration = 4,
-        spacing = 12,
-        fadeTime = 0.28,
-        slideDistance = 18
-    },
-    _icons = { info = "rbxassetid://9405926389" }
+	_notifications = {},
+	_theme = {
+		primaryColor = Color3.fromRGB(30,30,30),
+		textColor = Color3.fromRGB(255,255,255),
+		font = Enum.Font.GothamSemibold,
+		cornerRadius = UDim.new(0,8)
+	},
+	_settings = {
+		duration = 4,
+		spacing = 12,
+		fadeTime = 0.28,
+		slideDistance = 18
+	},
+	_icons = { info = "rbxassetid://9405926389" }
 }
 
 function NotificationLib:_init()
-    if not self._container then
-        self._container = Instance.new("ScreenGui")
-        self._container.Name = "NotificationLibrary"
-        self._container.ResetOnSpawn = false
-        self._container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        self._container.Parent = game:GetService("CoreGui")
-    end
+	if not self._container then
+		self._container = Instance.new("ScreenGui")
+		self._container.Name = "NotificationLibrary"
+		self._container.ResetOnSpawn = false
+		self._container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		self._container.Parent = game:GetService("CoreGui")
+	end
 end
 
 function NotificationLib:_calculatePosition(index)
-    local spacing = self._settings.spacing
-    local height = 90
-    return UDim2.new(1, -24, 1, -24 - (index-1)*(height+spacing))
+	local spacing = self._settings.spacing
+	local height = 90
+	return UDim2.new(1, -24, 1, -24 - (index-1)*(height+spacing))
 end
 
 function NotificationLib:_animateOut(frame, callback)
-    local tween = TweenService:Create(frame, TweenInfo.new(self._settings.fadeTime, Enum.EasingStyle.Quad), {
-        Position = frame.Position + UDim2.new(0,0,0,self._settings.slideDistance),
-        BackgroundTransparency = 1
-    })
-    tween:Play()
-    tween.Completed:Connect(function()
-        if frame and frame.Parent then frame:Destroy() end
-        if callback then callback() end
-    end)
+	local tween = TweenService:Create(frame, TweenInfo.new(self._settings.fadeTime, Enum.EasingStyle.Quad), {
+		Position = frame.Position + UDim2.new(0,0,0,self._settings.slideDistance),
+		BackgroundTransparency = 1
+	})
+	tween:Play()
+	tween.Completed:Connect(function()
+		if frame and frame.Parent then frame:Destroy() end
+		if callback then callback() end
+	end)
 end
 
 function NotificationLib:Notify(opt)
-    self:_init()
-    opt = opt or {}
-    local title = opt.Title or "Notification"
-    local message = opt.Message or ""
-    local duration = opt.Duration or self._settings.duration
+	self:_init()
+	opt = opt or {}
+	local title = opt.Title or "Notification"
+	local message = opt.Message or ""
+	local duration = opt.Duration or self._settings.duration
 
-    local frame = Instance.new("Frame")
-    frame.BackgroundColor3 = self._theme.primaryColor
-    frame.Size = UDim2.new(0,340,0,90)
-    frame.AnchorPoint = Vector2.new(1,1)
-    frame.Position = self:_calculatePosition(#self._notifications+1)
-    frame.Parent = self._container
-    Instance.new("UICorner", frame).CornerRadius = self._theme.cornerRadius
+	local frame = Instance.new("Frame")
+	frame.BackgroundColor3 = self._theme.primaryColor
+	frame.Size = UDim2.new(0,340,0,90)
+	frame.AnchorPoint = Vector2.new(1,1)
+	frame.Position = self:_calculatePosition(#self._notifications+1)
+	frame.Parent = self._container
+	Instance.new("UICorner", frame).CornerRadius = self._theme.cornerRadius
 
-    local icon = Instance.new("ImageLabel", frame)
-    icon.Image = self._icons.info
-    icon.Size = UDim2.new(0,28,0,28)
-    icon.Position = UDim2.new(0,12,0,12)
-    icon.BackgroundTransparency = 1
+	local icon = Instance.new("ImageLabel", frame)
+	icon.Image = self._icons.info
+	icon.Size = UDim2.new(0,28,0,28)
+	icon.Position = UDim2.new(0,12,0,12)
+	icon.BackgroundTransparency = 1
 
-    local titleLabel = Instance.new("TextLabel", frame)
-    titleLabel.Font = self._theme.font
-    titleLabel.TextColor3 = self._theme.textColor
-    titleLabel.TextSize = 16
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    titleLabel.Text = title
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Size = UDim2.new(1,-60,0,22)
-    titleLabel.Position = UDim2.new(0,48,0,10)
+	local titleLabel = Instance.new("TextLabel", frame)
+	titleLabel.Font = self._theme.font
+	titleLabel.TextColor3 = self._theme.textColor
+	titleLabel.TextSize = 16
+	titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+	titleLabel.Text = title
+	titleLabel.BackgroundTransparency = 1
+	titleLabel.Size = UDim2.new(1,-60,0,22)
+	titleLabel.Position = UDim2.new(0,48,0,10)
 
-    local msgLabel = Instance.new("TextLabel", frame)
-    msgLabel.Font = Enum.Font.Gotham
-    msgLabel.TextColor3 = self._theme.textColor
-    msgLabel.TextSize = 14
-    msgLabel.TextWrapped = true
-    msgLabel.TextXAlignment = Enum.TextXAlignment.Left
-    msgLabel.Text = message
-    msgLabel.BackgroundTransparency = 1
-    msgLabel.Size = UDim2.new(1,-60,0,48)
-    msgLabel.Position = UDim2.new(0,48,0,30)
+	local msgLabel = Instance.new("TextLabel", frame)
+	msgLabel.Font = Enum.Font.Gotham
+	msgLabel.TextColor3 = self._theme.textColor
+	msgLabel.TextSize = 14
+	msgLabel.TextWrapped = true
+	msgLabel.TextXAlignment = Enum.TextXAlignment.Left
+	msgLabel.Text = message
+	msgLabel.BackgroundTransparency = 1
+	msgLabel.Size = UDim2.new(1,-60,0,48)
+	msgLabel.Position = UDim2.new(0,48,0,30)
 
-    table.insert(self._notifications, frame)
+	table.insert(self._notifications, frame)
 
-    task.delay(duration, function()
-        if frame and frame.Parent then
-            self:_animateOut(frame,function()
-                for i,v in ipairs(self._notifications) do
-                    if v==frame then table.remove(self._notifications,i); break end
-                end
-            end)
-        end
-    end)
+	task.delay(duration, function()
+		if frame and frame.Parent then
+			self:_animateOut(frame,function()
+				for i,v in ipairs(self._notifications) do
+					if v==frame then table.remove(self._notifications,i); break end
+				end
+			end)
+		end
+	end)
 end
 
 -- Si aucune fonction HTTP trouvée : affiche notif et stop
 if not requestFunc then
-    NotificationLib:Notify({
-        Title = "HTTP",
-        Message = getTranslatedMessage(),
-        Duration = 5
-    })
-    return
+	NotificationLib:Notify({
+		Title = "HTTP",
+		Message = getTranslatedMessage(),
+		Duration = 5
+	})
+	return
 end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -370,18 +398,18 @@ local screenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 
 -- Essayer de créer un parent vers un emplacement protégé
 pcall(function()
-    if gethui then
-        screenGui.Parent = gethui()
-    elseif syn and syn.protect_gui then
-        syn.protect_gui(screenGui)
-        screenGui.Parent = game:GetService("CoreGui")
-    else
-        screenGui.Parent = game:GetService("CoreGui")
-    end
+	if gethui then
+		screenGui.Parent = gethui()
+	elseif syn and syn.protect_gui then
+		syn.protect_gui(screenGui)
+		screenGui.Parent = game:GetService("CoreGui")
+	else
+		screenGui.Parent = game:GetService("CoreGui")
+	end
 end)
 
 if not screenGui.Parent then
-    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 end
 
 
@@ -404,7 +432,7 @@ local dragging, dragInput, dragStart, startPos
 local function updateDrag(input)
 	local delta = input.Position - dragStart
 	local pos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-	                     startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 	TweenService:Create(mainFrame, TweenInfo.new(0.15), {Position = pos}):Play()
 end
 
@@ -705,7 +733,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v4.9"
+versionLabel.Text = "v5.0"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -931,13 +959,13 @@ local function CreateServerFrame(server)
 	infoLabel.TextSize = 16
 	infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	local fps = math.floor(1000 / (server.ping or 1))
-    infoLabel.Text = "Ping : " .. (server.ping or "N/A") ..
-                 "\nFPS : " .. fps ..
-                 "\nPlayers : " .. server.playing .. "/" .. server.maxPlayers
+	infoLabel.Text = "Ping : " .. (server.ping or "N/A") ..
+		"\nFPS : " .. fps ..
+		"\nPlayers : " .. server.playing .. "/" .. server.maxPlayers
 
-        -- ID du Jeux 
+	-- ID du Jeux 
 
-        local placeIdLabel = Instance.new("TextLabel", serverFrame)
+	local placeIdLabel = Instance.new("TextLabel", serverFrame)
 	placeIdLabel.Size = UDim2.new(0, 300, 0, 20)
 	placeIdLabel.Position = UDim2.new(0, 10, 0, 76)
 	placeIdLabel.BackgroundTransparency = 1
@@ -974,27 +1002,27 @@ local function CreateServerFrame(server)
 	joinButton.Font = Enum.Font.Ubuntu
 	joinButton.TextSize = 18
 
-joinButton.MouseButton1Click:Connect(function()
-	TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, LocalPlayer)
-end)
+	joinButton.MouseButton1Click:Connect(function()
+		TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, LocalPlayer)
+	end)
 
--- Les boutons Copy Server ID
+	-- Les boutons Copy Server ID
 
-local copyJoinButton = Instance.new("TextButton", serverFrame)
-copyJoinButton.Size = UDim2.new(0, 100, 0, 30)
-copyJoinButton.Position = UDim2.new(1, -110, 0.5, 25)
-copyJoinButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-copyJoinButton.Text = "Copy Join"
-copyJoinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-copyJoinButton.Font = Enum.Font.Ubuntu
-copyJoinButton.TextSize = 16
+	local copyJoinButton = Instance.new("TextButton", serverFrame)
+	copyJoinButton.Size = UDim2.new(0, 100, 0, 30)
+	copyJoinButton.Position = UDim2.new(1, -110, 0.5, 25)
+	copyJoinButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+	copyJoinButton.Text = "Copy Join"
+	copyJoinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	copyJoinButton.Font = Enum.Font.Ubuntu
+	copyJoinButton.TextSize = 16
 
-copyJoinButton.MouseButton1Click:Connect(function()
-	local joinCommand = "Roblox.GameLauncher.joinGameInstance(" .. game.PlaceId .. ', "' .. server.id .. '")'
-	setclipboard(joinCommand)
-end)
+	copyJoinButton.MouseButton1Click:Connect(function()
+		local joinCommand = "Roblox.GameLauncher.joinGameInstance(" .. game.PlaceId .. ', "' .. server.id .. '")'
+		setclipboard(joinCommand)
+	end)
 
-table.insert(serverFrames, serverFrame)
+	table.insert(serverFrames, serverFrame)
 end
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1113,20 +1141,20 @@ end
 
 
 local NotificationLib = {
-    _notifications = {},
-    _theme = {
-        primaryColor = Color3.fromRGB(30, 30, 30),
-        textColor = Color3.fromRGB(255, 255, 255),
-        font = Enum.Font.GothamSemibold,
-        cornerRadius = UDim.new(0, 8)
-    },
-    _settings = {
-        duration = 4,
-        spacing = 12,
-        fadeTime = 0.28,
-        slideDistance = 18
-    },
-    _icons = { info = "rbxassetid://9405926389" }
+	_notifications = {},
+	_theme = {
+		primaryColor = Color3.fromRGB(30, 30, 30),
+		textColor = Color3.fromRGB(255, 255, 255),
+		font = Enum.Font.GothamSemibold,
+		cornerRadius = UDim.new(0, 8)
+	},
+	_settings = {
+		duration = 4,
+		spacing = 12,
+		fadeTime = 0.28,
+		slideDistance = 18
+	},
+	_icons = { info = "rbxassetid://9405926389" }
 }
 
 function NotificationLib:_init()
@@ -1214,27 +1242,27 @@ end
 
 -- Bouton Refresh 
 local function CreateRefreshButton(mainFrame)
-    local refreshBtn = Instance.new("ImageButton")
-    refreshBtn.Parent = mainFrame
-    refreshBtn.AnchorPoint = Vector2.new(0.5,0.5)
-    refreshBtn.Size = UDim2.new(0,47,0,47)
-    refreshBtn.Position = UDim2.new(0.5,250,0.5,-220)
-    refreshBtn.Image = "http://www.roblox.com/asset/?id=126446661859683"
-    refreshBtn.BackgroundTransparency = 1
-    refreshBtn.ZIndex = 10
+	local refreshBtn = Instance.new("ImageButton")
+	refreshBtn.Parent = mainFrame
+	refreshBtn.AnchorPoint = Vector2.new(0.5,0.5)
+	refreshBtn.Size = UDim2.new(0,47,0,47)
+	refreshBtn.Position = UDim2.new(0.5,250,0.5,-220)
+	refreshBtn.Image = "http://www.roblox.com/asset/?id=126446661859683"
+	refreshBtn.BackgroundTransparency = 1
+	refreshBtn.ZIndex = 10
 
-    refreshBtn.MouseButton1Click:Connect(function()
-        local success, err = pcall(refreshServers)
-        if not success then
-            NotificationLib:Notify({
-                Title = "Error",
-                Message = getTranslatedMessage(),
-                Duration = 4
-            })
-        end
-    end)
+	refreshBtn.MouseButton1Click:Connect(function()
+		local success, err = pcall(refreshServers)
+		if not success then
+			NotificationLib:Notify({
+				Title = "Error",
+				Message = getTranslatedMessage(),
+				Duration = 4
+			})
+		end
+	end)
 
-    return refreshBtn
+	return refreshBtn
 end
 
 
@@ -1302,123 +1330,123 @@ local LocalPlayer = Players.LocalPlayer
 
 -- Traductions
 local langText = {
-    ["fr"] = "L'ID du serveur a été copié avec succès !",
-    ["en"] = "Server ID copied successfully!",
-    ["es"] = "¡ID del servidor copiado correctamente!",
-    ["de"] = "Server-ID erfolgreich kopiert!",
-    ["it"] = "ID del server copiato con successo!",
-    ["pt"] = "ID do servidor copiado com sucesso!",
-    ["ru"] = "ID сервера успешно скопирован!",
-    ["zh"] = "服务器ID复制成功！",
-    ["tr"] = "Sunucu kimliği başarıyla kopyalandı!",
-    ["ja"] = "サーバーIDが正常にコピーされました！",
-    ["ar"] = "تم نسخ معرف الخادم بنجاح!",
+	["fr"] = "L'ID du serveur a été copié avec succès !",
+	["en"] = "Server ID copied successfully!",
+	["es"] = "¡ID del servidor copiado correctamente!",
+	["de"] = "Server-ID erfolgreich kopiert!",
+	["it"] = "ID del server copiato con successo!",
+	["pt"] = "ID do servidor copiado com sucesso!",
+	["ru"] = "ID сервера успешно скопирован!",
+	["zh"] = "服务器ID复制成功！",
+	["tr"] = "Sunucu kimliği başarıyla kopyalandı!",
+	["ja"] = "サーバーIDが正常にコピーされました！",
+	["ar"] = "تم نسخ معرف الخادم بنجاح!",
 }
 
 local function getTranslatedMessage()
-    local langCode = (LocalizationService.RobloxLocaleId or "en"):sub(1,2)
-    return langText[langCode] or langText["en"]
+	local langCode = (LocalizationService.RobloxLocaleId or "en"):sub(1,2)
+	return langText[langCode] or langText["en"]
 end
 
 
 local NotificationLib = {
-    _notifications = {},
-    _theme = {
-        primaryColor = Color3.fromRGB(30,30,30),
-        textColor = Color3.fromRGB(255,255,255),
-        font = Enum.Font.GothamSemibold,
-        cornerRadius = UDim.new(0,8)
-    },
-    _settings = {
-        duration = 4,
-        spacing = 12,
-        fadeTime = 0.28,
-        slideDistance = 18
-    },
-    _icons = { info = "rbxassetid://9405926389" }
+	_notifications = {},
+	_theme = {
+		primaryColor = Color3.fromRGB(30,30,30),
+		textColor = Color3.fromRGB(255,255,255),
+		font = Enum.Font.GothamSemibold,
+		cornerRadius = UDim.new(0,8)
+	},
+	_settings = {
+		duration = 4,
+		spacing = 12,
+		fadeTime = 0.28,
+		slideDistance = 18
+	},
+	_icons = { info = "rbxassetid://9405926389" }
 }
 
 function NotificationLib:_init()
-    if not self._container then
-        self._container = Instance.new("ScreenGui")
-        self._container.Name = "NotificationLibrary"
-        self._container.ResetOnSpawn = false
-        self._container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        self._container.Parent = game:GetService("CoreGui")
-    end
+	if not self._container then
+		self._container = Instance.new("ScreenGui")
+		self._container.Name = "NotificationLibrary"
+		self._container.ResetOnSpawn = false
+		self._container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		self._container.Parent = game:GetService("CoreGui")
+	end
 end
 
 function NotificationLib:_calculatePosition(index)
-    local spacing = self._settings.spacing
-    local height = 90
-    return UDim2.new(1,-24,1,-24-(index-1)*(height+spacing))
+	local spacing = self._settings.spacing
+	local height = 90
+	return UDim2.new(1,-24,1,-24-(index-1)*(height+spacing))
 end
 
 function NotificationLib:_animateOut(frame, callback)
-    local tween = TweenService:Create(frame, TweenInfo.new(self._settings.fadeTime, Enum.EasingStyle.Quad), {
-        Position = frame.Position + UDim2.new(0,0,0,self._settings.slideDistance),
-        BackgroundTransparency = 1
-    })
-    tween:Play()
-    tween.Completed:Connect(function()
-        if frame and frame.Parent then frame:Destroy() end
-        if callback then callback() end
-    end)
+	local tween = TweenService:Create(frame, TweenInfo.new(self._settings.fadeTime, Enum.EasingStyle.Quad), {
+		Position = frame.Position + UDim2.new(0,0,0,self._settings.slideDistance),
+		BackgroundTransparency = 1
+	})
+	tween:Play()
+	tween.Completed:Connect(function()
+		if frame and frame.Parent then frame:Destroy() end
+		if callback then callback() end
+	end)
 end
 
 function NotificationLib:Notify(opt)
-    self:_init()
-    opt = opt or {}
-    local title = opt.Title or "Notification"
-    local message = opt.Message or ""
-    local duration = opt.Duration or self._settings.duration
+	self:_init()
+	opt = opt or {}
+	local title = opt.Title or "Notification"
+	local message = opt.Message or ""
+	local duration = opt.Duration or self._settings.duration
 
-    local frame = Instance.new("Frame")
-    frame.BackgroundColor3 = self._theme.primaryColor
-    frame.Size = UDim2.new(0,340,0,90)
-    frame.AnchorPoint = Vector2.new(1,1)
-    frame.Position = self:_calculatePosition(#self._notifications+1)
-    frame.Parent = self._container
-    Instance.new("UICorner", frame).CornerRadius = self._theme.cornerRadius
+	local frame = Instance.new("Frame")
+	frame.BackgroundColor3 = self._theme.primaryColor
+	frame.Size = UDim2.new(0,340,0,90)
+	frame.AnchorPoint = Vector2.new(1,1)
+	frame.Position = self:_calculatePosition(#self._notifications+1)
+	frame.Parent = self._container
+	Instance.new("UICorner", frame).CornerRadius = self._theme.cornerRadius
 
-    local icon = Instance.new("ImageLabel", frame)
-    icon.Image = self._icons.info
-    icon.Size = UDim2.new(0,28,0,28)
-    icon.Position = UDim2.new(0,12,0,12)
-    icon.BackgroundTransparency = 1
+	local icon = Instance.new("ImageLabel", frame)
+	icon.Image = self._icons.info
+	icon.Size = UDim2.new(0,28,0,28)
+	icon.Position = UDim2.new(0,12,0,12)
+	icon.BackgroundTransparency = 1
 
-    local titleLabel = Instance.new("TextLabel", frame)
-    titleLabel.Font = self._theme.font
-    titleLabel.TextColor3 = self._theme.textColor
-    titleLabel.TextSize = 16
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    titleLabel.Text = title
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Size = UDim2.new(1,-60,0,22)
-    titleLabel.Position = UDim2.new(0,48,0,10)
+	local titleLabel = Instance.new("TextLabel", frame)
+	titleLabel.Font = self._theme.font
+	titleLabel.TextColor3 = self._theme.textColor
+	titleLabel.TextSize = 16
+	titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+	titleLabel.Text = title
+	titleLabel.BackgroundTransparency = 1
+	titleLabel.Size = UDim2.new(1,-60,0,22)
+	titleLabel.Position = UDim2.new(0,48,0,10)
 
-    local msgLabel = Instance.new("TextLabel", frame)
-    msgLabel.Font = Enum.Font.Gotham
-    msgLabel.TextColor3 = self._theme.textColor
-    msgLabel.TextSize = 14
-    msgLabel.TextWrapped = true
-    msgLabel.TextXAlignment = Enum.TextXAlignment.Left
-    msgLabel.Text = message
-    msgLabel.BackgroundTransparency = 1
-    msgLabel.Size = UDim2.new(1,-60,0,48)
-    msgLabel.Position = UDim2.new(0,48,0,30)
+	local msgLabel = Instance.new("TextLabel", frame)
+	msgLabel.Font = Enum.Font.Gotham
+	msgLabel.TextColor3 = self._theme.textColor
+	msgLabel.TextSize = 14
+	msgLabel.TextWrapped = true
+	msgLabel.TextXAlignment = Enum.TextXAlignment.Left
+	msgLabel.Text = message
+	msgLabel.BackgroundTransparency = 1
+	msgLabel.Size = UDim2.new(1,-60,0,48)
+	msgLabel.Position = UDim2.new(0,48,0,30)
 
-    table.insert(self._notifications, frame)
+	table.insert(self._notifications, frame)
 
-    task.delay(duration, function()
-        if frame and frame.Parent then
-            self:_animateOut(frame,function()
-                for i,v in ipairs(self._notifications) do
-                    if v==frame then table.remove(self._notifications,i); break end
-                end
-            end)
-        end
-    end)
+	task.delay(duration, function()
+		if frame and frame.Parent then
+			self:_animateOut(frame,function()
+				for i,v in ipairs(self._notifications) do
+					if v==frame then table.remove(self._notifications,i); break end
+				end
+			end)
+		end
+	end)
 end
 
 -- Bouton CopyGamelive avec notif
@@ -1485,7 +1513,7 @@ local langText = {
 }
 
 local function getTranslatedMessage()
-	
+
 	local tries = 0
 	while (not LocalizationService.RobloxLocaleId or #LocalizationService.RobloxLocaleId < 2) and tries < 20 do
 		tries = tries + 1
@@ -1500,24 +1528,24 @@ local startTime = os.clock()
 
 
 local NotificationLib = {
-    _notifications = {},
-    _theme = {
-        primaryColor = Color3.fromRGB(30, 30, 30),
-        textColor = Color3.fromRGB(255, 255, 255),
-        font = Enum.Font.GothamSemibold,
-        cornerRadius = UDim.new(0, 8)
-    },
-    _settings = {
-        duration = 4,
-        position = "BottomRight",
-        maxNotifications = 5,
-        spacing = 12,
-        fadeTime = 0.28,
-        slideDistance = 18
-    },
-    _icons = {
-        info = "rbxassetid://9405926389"
-    }
+	_notifications = {},
+	_theme = {
+		primaryColor = Color3.fromRGB(30, 30, 30),
+		textColor = Color3.fromRGB(255, 255, 255),
+		font = Enum.Font.GothamSemibold,
+		cornerRadius = UDim.new(0, 8)
+	},
+	_settings = {
+		duration = 4,
+		position = "BottomRight",
+		maxNotifications = 5,
+		spacing = 12,
+		fadeTime = 0.28,
+		slideDistance = 18
+	},
+	_icons = {
+		info = "rbxassetid://9405926389"
+	}
 }
 
 function NotificationLib:_init()
@@ -1608,28 +1636,28 @@ task.wait(0.1)
 local loadTime = os.clock() - startTime
 
 local function CreateRejoinButton(mainFrame)
-    local RejoinButton = Instance.new("ImageButton")
-    RejoinButton.Parent = mainFrame
-    RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
-    RejoinButton.Size = UDim2.new(0, 40, 0, 40)
-    RejoinButton.Position = UDim2.new(0.5, 204, 0.5, -220)
-    RejoinButton.Image = "rbxassetid://103864549538113"
-    RejoinButton.BackgroundTransparency = 1
-    RejoinButton.ZIndex = 10
+	local RejoinButton = Instance.new("ImageButton")
+	RejoinButton.Parent = mainFrame
+	RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
+	RejoinButton.Size = UDim2.new(0, 40, 0, 40)
+	RejoinButton.Position = UDim2.new(0.5, 204, 0.5, -220)
+	RejoinButton.Image = "rbxassetid://103864549538113"
+	RejoinButton.BackgroundTransparency = 1
+	RejoinButton.ZIndex = 10
 
-    RejoinButton.MouseButton1Click:Connect(function()
-        local loadTime = os.clock() - startTime
-        NotificationLib:Notify({
-            Title = string.format("Time used: %.3f s", loadTime),
-            Message = getTranslatedMessage(),
-            Type = "info",
-            Duration = 5
-        })
-        task.wait(2)
-        TeleportService:Teleport(game.PlaceId, LocalPlayer)
-    end)
+	RejoinButton.MouseButton1Click:Connect(function()
+		local loadTime = os.clock() - startTime
+		NotificationLib:Notify({
+			Title = string.format("Time used: %.3f s", loadTime),
+			Message = getTranslatedMessage(),
+			Type = "info",
+			Duration = 5
+		})
+		task.wait(2)
+		TeleportService:Teleport(game.PlaceId, LocalPlayer)
+	end)
 
-    return RejoinButton
+	return RejoinButton
 end
 
 
@@ -1656,96 +1684,96 @@ local function toggleGuiSize()
 		scrollFrame.Size = UDim2.new(1, -20, 1, -60)
 		scrollFrame.Position = UDim2.new(0, 10, 0, 50)
 
-	 if refreshBtn then
-        refreshBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-        refreshBtn.Size = UDim2.new(0, 47, 0, 47)
-        refreshBtn.Position = UDim2.new(0.5, 250, 0.5, -220)
-    end
+		if refreshBtn then
+			refreshBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			refreshBtn.Size = UDim2.new(0, 47, 0, 47)
+			refreshBtn.Position = UDim2.new(0.5, 250, 0.5, -220)
+		end
 
-	 if closeBtn then
-        closeBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-        closeBtn.Size = UDim2.new(0, 40, 0, 40)
-         closeBtn.Position = UDim2.new(0.5, 298, 0.5, -220)
-    end
+		if closeBtn then
+			closeBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			closeBtn.Size = UDim2.new(0, 40, 0, 40)
+			closeBtn.Position = UDim2.new(0.5, 298, 0.5, -220)
+		end
 
-	if resizeButton then
-        resizeButton.AnchorPoint = Vector2.new(0.5, 0.5)
-        resizeButton.Size = UDim2.new(0, 40, 0, 40)
-        resizeButton.Position = UDim2.new(0.5, 157, 0.5, -220)
-    end
+		if resizeButton then
+			resizeButton.AnchorPoint = Vector2.new(0.5, 0.5)
+			resizeButton.Size = UDim2.new(0, 40, 0, 40)
+			resizeButton.Position = UDim2.new(0.5, 157, 0.5, -220)
+		end
 
-	if RejoinButton then
-        RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
-        RejoinButton.Size = UDim2.new(0, 40, 0, 40)
-        RejoinButton.Position = UDim2.new(0.5, 204, 0.5, -220)
-    end
+		if RejoinButton then
+			RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
+			RejoinButton.Size = UDim2.new(0, 40, 0, 40)
+			RejoinButton.Position = UDim2.new(0.5, 204, 0.5, -220)
+		end
 
-	if lowPlayersBtn then
-        lowPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-        lowPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
-        lowPlayersBtn.Position = UDim2.new(0.5, -183, 0.5, -220)
-    end
+		if lowPlayersBtn then
+			lowPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			lowPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
+			lowPlayersBtn.Position = UDim2.new(0.5, -183, 0.5, -220)
+		end
 
-	if maxPlayersBtn then
-        maxPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-        maxPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
-        maxPlayersBtn.Position = UDim2.new(0.5, -264, 0.5, -220)
-    end
+		if maxPlayersBtn then
+			maxPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			maxPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
+			maxPlayersBtn.Position = UDim2.new(0.5, -264, 0.5, -220)
+		end
 
-	if CopyGamelive then
-        CopyGamelive.AnchorPoint = Vector2.new(0.5, 0.5)
-        CopyGamelive.Size = UDim2.new(0, 41, 0, 41)
-        CopyGamelive.Position = UDim2.new(0.5, -227, 0.5, -220)
-    end
+		if CopyGamelive then
+			CopyGamelive.AnchorPoint = Vector2.new(0.5, 0.5)
+			CopyGamelive.Size = UDim2.new(0, 41, 0, 41)
+			CopyGamelive.Position = UDim2.new(0.5, -227, 0.5, -220)
+		end
 
 	else  
 		mainFrame.Size = UDim2.new(0, 549, 0, 390)
 		scrollFrame.Size = UDim2.new(1, -10, 1, -40)
 		scrollFrame.Position = UDim2.new(0, 5, 0, 40)
 
-	if refreshBtn then
-        refreshBtn.Position = UDim2.new(0.5, 225, 0.5, -175)
-        refreshBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-        refreshBtn.Size = UDim2.new(0, 30, 0, 30)
-    end
+		if refreshBtn then
+			refreshBtn.Position = UDim2.new(0.5, 225, 0.5, -175)
+			refreshBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			refreshBtn.Size = UDim2.new(0, 30, 0, 30)
+		end
 
-	if closeBtn then
-        closeBtn.Position = UDim2.new(0.5, 255, 0.5, -175)
-        closeBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-        closeBtn.Size = UDim2.new(0, 25, 0, 25)
-    end
+		if closeBtn then
+			closeBtn.Position = UDim2.new(0.5, 255, 0.5, -175)
+			closeBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			closeBtn.Size = UDim2.new(0, 25, 0, 25)
+		end
 
-	if RejoinButton then
-        RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
-        RejoinButton.Size = UDim2.new(0, 25, 0, 25)
-        RejoinButton.Position = UDim2.new(0.5, 195, 0.5, -175)
-    end
+		if RejoinButton then
+			RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
+			RejoinButton.Size = UDim2.new(0, 25, 0, 25)
+			RejoinButton.Position = UDim2.new(0.5, 195, 0.5, -175)
+		end
 
-	if maxPlayersBtn then
-        maxPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-         maxPlayersBtn.Size = UDim2.new(0, 25, 0, 25)
-         maxPlayersBtn.Position = UDim2.new(0.5, -222, 0.5, -175)
-    end
+		if maxPlayersBtn then
+			maxPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			maxPlayersBtn.Size = UDim2.new(0, 25, 0, 25)
+			maxPlayersBtn.Position = UDim2.new(0.5, -222, 0.5, -175)
+		end
 
 
-	if lowPlayersBtn then
-        lowPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-        lowPlayersBtn.Size = UDim2.new(0, 25, 0, 25)
-        lowPlayersBtn.Position = UDim2.new(0.5, -173, 0.5, -175)
-    end
+		if lowPlayersBtn then
+			lowPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			lowPlayersBtn.Size = UDim2.new(0, 25, 0, 25)
+			lowPlayersBtn.Position = UDim2.new(0.5, -173, 0.5, -175)
+		end
 
-    if CopyGamelive then
-        CopyGamelive.AnchorPoint = Vector2.new(0.5, 0.5)
-        CopyGamelive.Size = UDim2.new(0, 25, 0, 25)
-         CopyGamelive.Position = UDim2.new(0.5, -199, 0.5, -175)
-    end
+		if CopyGamelive then
+			CopyGamelive.AnchorPoint = Vector2.new(0.5, 0.5)
+			CopyGamelive.Size = UDim2.new(0, 25, 0, 25)
+			CopyGamelive.Position = UDim2.new(0.5, -199, 0.5, -175)
+		end
 
-	   if resizeButton then
-           resizeButton.AnchorPoint = Vector2.new(0.5, 0.5)
-           resizeButton.Size = UDim2.new(0, 25, 0, 25)
-           resizeButton.Position = UDim2.new(0.5, 167, 0.5, -175)
-        end
-    end
+		if resizeButton then
+			resizeButton.AnchorPoint = Vector2.new(0.5, 0.5)
+			resizeButton.Size = UDim2.new(0, 25, 0, 25)
+			resizeButton.Position = UDim2.new(0.5, 167, 0.5, -175)
+		end
+	end
 	isSmall = not isSmall
 end
 
@@ -1762,39 +1790,39 @@ local Lighting = game:GetService("Lighting")
 -- Sauvegarde des réglages d'origine
 local UserSettings = settings():GetService("RenderSettings")
 local originalSettings = {
-    QualityLevel = UserSettings.QualityLevel,
-    EditQualityLevel = UserSettings.EditQualityLevel,
-    GlobalShadows = Lighting.GlobalShadows
+	QualityLevel = UserSettings.QualityLevel,
+	EditQualityLevel = UserSettings.EditQualityLevel,
+	GlobalShadows = Lighting.GlobalShadows
 }
 
 -- Active le mode performance boost
 local function EnablePerformanceBoost()
-    UserSettings.QualityLevel = Enum.QualityLevel.Level01
-    UserSettings.EditQualityLevel = Enum.QualityLevel.Level01
+	UserSettings.QualityLevel = Enum.QualityLevel.Level01
+	UserSettings.EditQualityLevel = Enum.QualityLevel.Level01
 
-    -- Désactive tous les effets visuels post-traitement
-    for _, effect in pairs(Lighting:GetChildren()) do
-        if effect:IsA("PostEffect") then
-            effect.Enabled = false
-        end
-    end
+	-- Désactive tous les effets visuels post-traitement
+	for _, effect in pairs(Lighting:GetChildren()) do
+		if effect:IsA("PostEffect") then
+			effect.Enabled = false
+		end
+	end
 
-    -- Désactive les ombres globales
-    Lighting.GlobalShadows = false
+	-- Désactive les ombres globales
+	Lighting.GlobalShadows = false
 end
 
 -- Restaure les réglages normaux
 local function DisablePerformanceBoost()
-    UserSettings.QualityLevel = originalSettings.QualityLevel
-    UserSettings.EditQualityLevel = originalSettings.EditQualityLevel
+	UserSettings.QualityLevel = originalSettings.QualityLevel
+	UserSettings.EditQualityLevel = originalSettings.EditQualityLevel
 
-    for _, effect in pairs(Lighting:GetChildren()) do
-        if effect:IsA("PostEffect") then
-            effect.Enabled = true
-        end
-    end
+	for _, effect in pairs(Lighting:GetChildren()) do
+		if effect:IsA("PostEffect") then
+			effect.Enabled = true
+		end
+	end
 
-    Lighting.GlobalShadows = originalSettings.GlobalShadows
+	Lighting.GlobalShadows = originalSettings.GlobalShadows
 end
 
 -- Exemple : activer au lancement
@@ -1802,8 +1830,8 @@ EnablePerformanceBoost()
 
 -- Exemple : désactiver quand tu fermes le GUI
 closeBtn.MouseButton1Click:Connect(function()
-    DisablePerformanceBoost()
-    screenGui.Enabled = false
+	DisablePerformanceBoost()
+	screenGui.Enabled = false
 end)
 
 
@@ -1846,7 +1874,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "4.9"
+local version = "5.0"
 
 local translations = {
 	fr = {
@@ -1919,5 +1947,3 @@ Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
