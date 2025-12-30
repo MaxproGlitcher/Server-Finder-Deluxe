@@ -228,6 +228,7 @@ local UserInputService = game:GetService("UserInputService")
 local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 local VRService = game:GetService("VRService")
+local CaptureService = game:GetService("CaptureService")
 
 local camera = workspace:FindFirstChildOfClass("Camera") or workspace.CurrentCamera
 if not camera then
