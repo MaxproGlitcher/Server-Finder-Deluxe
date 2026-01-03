@@ -4,7 +4,7 @@
   <img src="https://visitor-badge.laobi.icu/badge?page_id=MaxproGlitcher.MaxproGlitcher&"  />
 </div>
 
-![image alt](https://github.com/MaxproGlitcher/Finds-Servers/blob/main/Server%20Finder%20Deluxe%20Screen%20Shot.png?raw=true)
+![image alt](https://github.com/MaxproGlitcher/Server-Finder-Deluxe/blob/5d12147161402e929ef64b82e1c0c6bb2a03b61d/Server%20Finder%20logo.jpg)
 
 # Script Finder-Server Deluxe 💻📱
 ```lua
