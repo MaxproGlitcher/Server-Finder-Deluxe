@@ -44,4 +44,4 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Server
 # video Finds-Server Deluxe script 👀🎬
 
 # Here is the overview 👀🎬
-https://github.com/user-attachments/assets/3dbfd508-2864-486e-92a0-38ed1a19778e
+https://github.com/user-attachments/assets/c3cee14b-78aa-4a2e-8e28-db34e6a2b0a0
