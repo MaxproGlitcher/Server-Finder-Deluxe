@@ -25,14 +25,20 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Server
 - The Deluxe Servers also allow you to obtain links to the servers you are on or simply another proposed server and add it in your web browser console, making it easy if you want to send it to your friends or as an alternative account.
 
 # To join a servers, just click on join its very easy !!!🖱️⬇️
-<img width="968" height="710" alt="Image" src="https://github.com/user-attachments/assets/369c6e8c-d66e-4435-b320-13963067679d" />
+<img width="967" height="742" alt="Image" src="https://github.com/user-attachments/assets/293843dc-9c74-4b9d-972a-7a958378335b" />
 
 # Option Custom Button for Get Servers link Game
 # Your Link for to add in the web browser console🖱️⬇️
-<img width="968" height="710" alt="Image" src="https://github.com/user-attachments/assets/267ed2c7-0ee4-4e70-848d-eeea9dd0c43f" />
+<img width="967" height="742" alt="Image" src="https://github.com/user-attachments/assets/158de556-efee-40b7-8328-1d412ebc4a0e" />
 
 # Link Servers for to add in the web browser console🖱️⬇️
-<img width="968" height="710" alt="Image" src="https://github.com/user-attachments/assets/48f92d6c-8020-47f5-8429-b46f318d8c8c" />
+<img width="967" height="742" alt="Image" src="https://github.com/user-attachments/assets/efceec74-3799-4ae4-b7e1-271b7a46c29a" />
+
+# Change the size of servers with information collected from servers
+<img width="967" height="742" alt="Image" src="https://github.com/user-attachments/assets/d8725f56-c39f-4cfc-b435-103f4b8874d1" />
+
+# Connect to the same public servers from the GUI
+<img width="967" height="742" alt="Image" src="https://github.com/user-attachments/assets/10da3d5b-542b-47b0-9df1-bc88affb0cd1" />
 
 
 # video Finds-Server Deluxe script 👀🎬
