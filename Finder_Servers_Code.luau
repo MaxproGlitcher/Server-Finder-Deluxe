@@ -24,6 +24,8 @@
 ]]
 --------------------------------------------------------------------------------------------------------------------
 
+
+
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 local CoreGui = game:GetService("CoreGui")
@@ -198,6 +200,16 @@ if gui then
 end
 
 --------------------------------------------------------------------------------------------------------------------
+
+if _G.SFD_LOADED and not _G.SFD_CAN_RELOAD then
+	-- error("Server Finder Deluxe is already running!", 0)
+     return 
+end
+
+_G.SFD_LOADED = true
+_G.SFD_CAN_RELOAD = false
+
+if not game:IsLoaded() then game.Loaded:Wait() end
 
 -- Compatibilité getgenv
 
@@ -457,6 +469,36 @@ end)
 UserInputService.InputChanged:Connect(function(input)
 	if dragging and input == dragInput then updateDrag(input) end
 end)
+
+-- Logo Server Finder Deluxe  
+local logo = Instance.new("ImageLabel")
+logo.Name = "BackgroundLogoServeFinderDeluxe"
+logo.Parent = mainFrame
+logo.Size = UDim2.new(0.8, 0, 0.8, 0)
+logo.Position = UDim2.new(0.5, 0, 0.5, 0)
+logo.AnchorPoint = Vector2.new(0.5, 0.5)
+logo.BackgroundTransparency = 1
+logo.ImageTransparency = 0.88
+logo.ScaleType = Enum.ScaleType.Fit
+logo.ZIndex = 2
+
+
+local function loadLogo()
+    repeat
+        if mainFrame.Parent then             
+            local success = pcall(function() 
+                logo.Image = "http://www.roblox.com/asset/?id=75503909317175" 
+            end)
+            if success and logo.Image and logo.Image ~= "" then
+                break 
+            end
+        end
+        task.wait(0.5) 
+    until logo.Image and logo.Image ~= ""
+end
+
+task.defer(loadLogo)
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -734,7 +776,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.0"
+versionLabel.Text = "v5.1"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1485,6 +1527,8 @@ closeBtn.BackgroundTransparency = 1
 closeBtn.ZIndex = 2
 
 closeBtn.MouseButton1Click:Connect(function()
+	_G.SFD_LOADED = false
+	_G.SFD_CAN_RELOAD = true
 	screenGui:Destroy()
 end)
 
@@ -1875,7 +1919,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.0"
+local version = "5.1"
 
 local translations = {
 	fr = {
