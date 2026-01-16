@@ -177,6 +177,18 @@ elseif isValentine then
 		Color3.fromRGB(255,85,127)})
 end
 
+local loading = true
+task.spawn(function()
+	while loading and status.Parent do
+		for i = 1, 3 do
+			status.Text = "Loading" .. string.rep(".", i)
+			task.wait(0.4)
+		end
+		status.Text = "Loading"
+		task.wait(0.4)
+	end
+end)
+
 -- Animation
 local duration = 2
 TweenService:Create(bar, TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
@@ -188,8 +200,9 @@ for i = 0, 100 do
 	task.wait(duration / 100)
 end
 
+loading = false   
 status.Text = "Success"
-task.wait(0.8)
+task.wait(0.30)
 
 if blur then
 	blur:Destroy()
@@ -260,34 +273,47 @@ local TweenService = game:GetService("TweenService")
 
 -- ( Si exploit n'a pas la fonction http le script n'ext pas utilisable )
 
-local requestFunc = nil
-if syn and syn.request then
-	requestFunc = syn.request
-elseif http and http.request then
-	requestFunc = http.request
-elseif http_request then
-	requestFunc = http_request
-elseif fluxus and fluxus.request then
-	requestFunc = fluxus.request
-elseif request then
-	requestFunc = request
+local requestFunc
+
+local function detectHttp()
+	return pcall(function()
+		if syn and syn.request then
+			requestFunc = syn.request
+		elseif http and http.request then
+			requestFunc = http.request
+		elseif http_request then
+			requestFunc = http_request
+		elseif fluxus and fluxus.request then
+			requestFunc = fluxus.request
+		elseif request then
+			requestFunc = request
+		end
+	end)
 end
 
-
--- Traductions
+-- retry sécurisé (2 tentatives)
+local success = false
+for _ = 1, 2 do
+	local ok = detectHttp()
+	if ok and requestFunc then
+		success = true
+		break
+	end
+	task.wait(0.05)
+end
 
 local translations = {
-	["fr"] = "Aucune fonction HTTP supportée trouvée ! 😢",
-	["en"] = "No supported HTTP request function found! 😢",
-	["es"] = "¡No se encontró ninguna función HTTP compatible! 😢",
-	["pt"] = "Nenhuma função HTTP suportada encontrada! 😢",
-	["tr"] = "Desteklenen HTTP isteği işlevi bulunamadı! 😢",
-	["it"] = "Nessuna funzione HTTP supportata trovata! 😢",
-	["de"] = "Keine unterstützte HTTP-Anfragefunktion gefunden! 😢",
-	["ar"] = "لم يتم العثور على أي دالة HTTP مدعومة! 😢",
-	["ja"] = "サポートされているHTTPリクエスト機能が見つかりません！😢",
-	["ru"] = "Поддерживаемая функция HTTP-запроса не найдена! 😢",
-	["zh"] = "未找到受支持的HTTP请求函数！😢",
+	["fr"] = "Aucune fonction HTTP supportée trouvée ! ⚠️",
+	["en"] = "No supported HTTP request function found! ⚠️",
+	["es"] = "¡No se encontró ninguna función HTTP compatible! ⚠️",
+	["pt"] = "Nenhuma função HTTP suportada encontrada! ⚠️",
+	["tr"] = "Desteklenen HTTP isteği işlevi bulunamadı! ⚠️",
+	["it"] = "Nessuna funzione HTTP supportata trovata! ⚠️",
+	["de"] = "Keine unterstützte HTTP-Anfragefunktion gefunden! ⚠️",
+	["ar"] = "لم يتم العثور على أي دالة HTTP مدعومة! ⚠️",
+	["ja"] = "サポートされているHTTPリクエスト機能が見つかりません！⚠️",
+	["ru"] = "Поддерживаемая функция HTTP-запроса не найдена! ⚠️",
+	["zh"] = "未找到受支持的HTTP请求函数！⚠️",
 }
 
 local function getTranslatedMessage()
@@ -396,10 +422,13 @@ function NotificationLib:Notify(opt)
 	end)
 end
 
+if not success then
+	warn("HTTP ERROR , No supported HTTP request function found!")
+
 -- Si aucune fonction HTTP trouvée : affiche notif et stop
-if not requestFunc then
+
 	NotificationLib:Notify({
-		Title = "HTTP",
+		Title = "HTTP ERROR",
 		Message = getTranslatedMessage(),
 		Duration = 5
 	})
@@ -776,7 +805,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.1"
+versionLabel.Text = "v5.2"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1919,7 +1948,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.1"
+local version = "5.2"
 
 local translations = {
 	fr = {
