@@ -805,7 +805,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.2"
+versionLabel.Text = "v5.3"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1030,6 +1030,7 @@ local function CreateServerFrame(server)
 	infoLabel.Font = Enum.Font.Ubuntu
 	infoLabel.TextSize = 16
 	infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	infoLabel.ZIndex = 3
 	local fps = math.floor(1000 / (server.ping or 1))
 	infoLabel.Text = "Ping : " .. (server.ping or "N/A") ..
 		"\nFPS : " .. fps ..
@@ -1048,6 +1049,7 @@ local function CreateServerFrame(server)
 	placeIdLabel.TextSize = 14
 	placeIdLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 	placeIdLabel.Text = "Game ID : " .. tostring(game.PlaceId)
+    placeIdLabel.ZIndex = 4
 
 	-- ID des Servers Publics
 
@@ -1062,6 +1064,7 @@ local function CreateServerFrame(server)
 	idLabel.TextSize = 14
 	idLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 	idLabel.Text = "ID : " .. server.id
+    idLabel.ZIndex = 4
 
 	-- Les buttons rejoint pour tout les Servers public obtenu
 
@@ -1073,6 +1076,7 @@ local function CreateServerFrame(server)
 	joinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	joinButton.Font = Enum.Font.Ubuntu
 	joinButton.TextSize = 18
+	joinButton.ZIndex = 4
 
 	joinButton.MouseButton1Click:Connect(function()
 		TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, LocalPlayer)
@@ -1088,6 +1092,7 @@ local function CreateServerFrame(server)
 	copyJoinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	copyJoinButton.Font = Enum.Font.Ubuntu
 	copyJoinButton.TextSize = 16
+	copyJoinButton.ZIndex = 4
 
 	copyJoinButton.MouseButton1Click:Connect(function()
 		local joinCommand = "Roblox.GameLauncher.joinGameInstance(" .. game.PlaceId .. ', "' .. server.id .. '")'
@@ -1321,7 +1326,7 @@ local function CreateRefreshButton(mainFrame)
 	refreshBtn.Position = UDim2.new(0.5,250,0.5,-220)
 	refreshBtn.Image = "http://www.roblox.com/asset/?id=126446661859683"
 	refreshBtn.BackgroundTransparency = 1
-	refreshBtn.ZIndex = 10
+	refreshBtn.ZIndex = 7
 
 	refreshBtn.MouseButton1Click:Connect(function()
 		local success, err = pcall(refreshServers)
@@ -1372,7 +1377,7 @@ lowPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
 lowPlayersBtn.Position = UDim2.new(0.5, -183, 0.5, -220)
 lowPlayersBtn.Image = "http://www.roblox.com/asset/?id=78395837711238"
 lowPlayersBtn.BackgroundTransparency = 1
-lowPlayersBtn.ZIndex = 2
+lowPlayersBtn.ZIndex = 5
 
 local maxPlayersBtn = Instance.new("ImageButton", mainFrame)
 maxPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1380,7 +1385,7 @@ maxPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
 maxPlayersBtn.Position = UDim2.new(0.5, -264, 0.5, -220)
 maxPlayersBtn.Image = "http://www.roblox.com/asset/?id=117409611207958"
 maxPlayersBtn.BackgroundTransparency = 1
-maxPlayersBtn.ZIndex = 2
+maxPlayersBtn.ZIndex = 5
 
 lowPlayersBtn.MouseButton1Click:Connect(function()
 	local sorted = sortServers(allServers, "lowPlayers")
@@ -1528,7 +1533,7 @@ CopyGamelive.Size = UDim2.new(0,41,0,41)
 CopyGamelive.Position = UDim2.new(0.5,-227,0.5,-220)
 CopyGamelive.Image = "http://www.roblox.com/asset/?id=122024633828045"
 CopyGamelive.BackgroundTransparency = 1
-CopyGamelive.ZIndex = 2
+CopyGamelive.ZIndex = 6
 
 CopyGamelive.MouseButton1Click:Connect(function()
 	local currentServerId = game.JobId
@@ -1553,7 +1558,7 @@ closeBtn.Size = UDim2.new(0, 40, 0, 40)
 closeBtn.Position = UDim2.new(0.5, 298, 0.5, -220)
 closeBtn.Image = "http://www.roblox.com/asset/?id=138896199949173"
 closeBtn.BackgroundTransparency = 1
-closeBtn.ZIndex = 2
+closeBtn.ZIndex = 6
 
 closeBtn.MouseButton1Click:Connect(function()
 	_G.SFD_LOADED = false
@@ -1747,7 +1752,7 @@ resizeButton.Size = UDim2.new(0, 40, 0, 40)
 resizeButton.Position = UDim2.new(0.5, 157, 0.5, -220)
 resizeButton.Image = "http://www.roblox.com/asset/?id=92176830367195"
 resizeButton.BackgroundTransparency = 1
-resizeButton.ZIndex = 2
+resizeButton.ZIndex = 9
 
 local isSmall = true -- Définir la taille initiale comme petite
 
@@ -1948,7 +1953,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.2"
+local version = "5.3"
 
 local translations = {
 	fr = {
@@ -2019,6 +2024,6 @@ Modules.print("Grey", "Version "..version, 20)
 Modules.print("Grey", msg.line, 20)
 Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
-
+Modules.ZIndex = 20
 --------------------------------------------------------------------------------------------------------------------
 
