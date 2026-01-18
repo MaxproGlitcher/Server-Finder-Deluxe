@@ -23,8 +23,9 @@
                                                                                                   
 ]]
 --------------------------------------------------------------------------------------------------------------------
-
-
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
 
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
@@ -805,7 +806,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.3"
+versionLabel.Text = "v5.4"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1405,7 +1406,7 @@ local LocalizationService = game:GetService("LocalizationService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Traductions
+
 local langText = {
 	["fr"] = "L'ID du serveur a été copié avec succès !",
 	["en"] = "Server ID copied successfully!",
@@ -1710,12 +1711,14 @@ function NotificationLib:Notify(opt)
 	end)
 end
 
-
 task.wait(0.1)
-local loadTime = os.clock() - startTime
 
-local function CreateRejoinButton(mainFrame)
-	local RejoinButton = Instance.new("ImageButton")
+local SCRIPT_SOURCE_SERVER_FINDER_DELUXE = [=[
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/refs/heads/main/Finder_Servers_Code.luau"))()
+]=]
+
+    local RejoinButton = Instance.new("ImageButton")
 	RejoinButton.Parent = mainFrame
 	RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
 	RejoinButton.Size = UDim2.new(0, 40, 0, 40)
@@ -1725,22 +1728,18 @@ local function CreateRejoinButton(mainFrame)
 	RejoinButton.ZIndex = 10
 
 	RejoinButton.MouseButton1Click:Connect(function()
-		local loadTime = os.clock() - startTime
 		NotificationLib:Notify({
-			Title = string.format("Time used: %.3f s", loadTime),
+			Title = string.format("Time used: %.3f s", os.clock() - startTime),
 			Message = getTranslatedMessage(),
 			Type = "info",
 			Duration = 5
 		})
-		task.wait(2)
+
+		queue_on_teleport(SCRIPT_SOURCE_SERVER_FINDER_DELUXE)
+		task.wait(1)
+
 		TeleportService:Teleport(game.PlaceId, LocalPlayer)
 	end)
-
-	return RejoinButton
-end
-
-
-local RejoinButton = CreateRejoinButton(mainFrame)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1953,7 +1952,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.3"
+local version = "5.4"
 
 local translations = {
 	fr = {
@@ -2026,4 +2025,3 @@ Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
 Modules.ZIndex = 20
 --------------------------------------------------------------------------------------------------------------------
-
