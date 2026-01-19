@@ -24,7 +24,7 @@
 ]]
 --------------------------------------------------------------------------------------------------------------------
 if not game:IsLoaded() then
-    game.Loaded:Wait()
+	game.Loaded:Wait()
 end
 
 local TweenService = game:GetService("TweenService")
@@ -217,7 +217,7 @@ end
 
 if _G.SFD_LOADED and not _G.SFD_CAN_RELOAD then
 	-- error("Server Finder Deluxe is already running!", 0)
-     return 
+	return 
 end
 
 _G.SFD_LOADED = true
@@ -256,17 +256,43 @@ local TweenService = game:GetService("TweenService")
 local VRService = game:GetService("VRService")
 local CaptureService = game:GetService("CaptureService")
 
-local camera = workspace:FindFirstChildOfClass("Camera") or workspace.CurrentCamera
+local camera = workspace.CurrentCamera or workspace:FindFirstChildOfClass("Camera")
 if not camera then
 	repeat task.wait() camera = workspace.CurrentCamera until camera
 end
-local SCREEN_SIZE = camera.ViewportSize
-local IsOnMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
-local IsOnMobile = table.find({Enum.Platform.IOS, Enum.Platform.Android}, game:GetService("UserInputService"):GetPlatform())
-VREnabled = game:GetService("VRService").VREnabled
 
-queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
-httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+local SCREEN_SIZE = camera.ViewportSize
+local platform = UserInputService:GetPlatform()
+
+local IsOnMobile = (function() if platform == Enum.Platform.IOS or platform == Enum.Platform.Android or platform == Enum.Platform.AndroidTV or platform == Enum.Platform.Chromecast or platform == Enum.Platform.MetaOS then
+		return true
+	end
+
+	if platform == Enum.Platform.None then
+		return UserInputService.TouchEnabled and not (UserInputService.KeyboardEnabled or UserInputService.MouseEnabled)
+	end
+
+	return false
+end)()
+
+local IsOnPC = (function() if platform == Enum.Platform.Windows or platform == Enum.Platform.OSX or platform == Enum.Platform.Linux or platform == Enum.Platform.SteamOS or platform == Enum.Platform.UWP or platform == Enum.Platform.DOS or platform == Enum.Platform.BeOS then
+		return true
+	end
+
+	if platform == Enum.Platform.None then
+		return UserInputService.KeyboardEnabled or UserInputService.MouseEnabled
+	end
+
+	return false
+end)()
+
+local VREnabled = game:GetService("VRService").VREnabled
+
+local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
+
+local httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+
+
 --------------------------------------------------------------------------------------------------------------------
 local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
@@ -426,7 +452,7 @@ end
 if not success then
 	warn("HTTP ERROR , No supported HTTP request function found!")
 
--- Si aucune fonction HTTP trouvée : affiche notif et stop
+	-- Si aucune fonction HTTP trouvée : affiche notif et stop
 
 	NotificationLib:Notify({
 		Title = "HTTP ERROR",
@@ -514,17 +540,17 @@ logo.ZIndex = 2
 
 
 local function loadLogo()
-    repeat
-        if mainFrame.Parent then             
-            local success = pcall(function() 
-                logo.Image = "http://www.roblox.com/asset/?id=75503909317175" 
-            end)
-            if success and logo.Image and logo.Image ~= "" then
-                break 
-            end
-        end
-        task.wait(0.5) 
-    until logo.Image and logo.Image ~= ""
+	repeat
+		if mainFrame.Parent then             
+			local success = pcall(function() 
+				logo.Image = "http://www.roblox.com/asset/?id=75503909317175" 
+			end)
+			if success and logo.Image and logo.Image ~= "" then
+				break 
+			end
+		end
+		task.wait(0.5) 
+	until logo.Image and logo.Image ~= ""
 end
 
 task.defer(loadLogo)
@@ -806,7 +832,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.4"
+versionLabel.Text = "v5.5"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1050,7 +1076,7 @@ local function CreateServerFrame(server)
 	placeIdLabel.TextSize = 14
 	placeIdLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 	placeIdLabel.Text = "Game ID : " .. tostring(game.PlaceId)
-    placeIdLabel.ZIndex = 4
+	placeIdLabel.ZIndex = 4
 
 	-- ID des Servers Publics
 
@@ -1065,7 +1091,7 @@ local function CreateServerFrame(server)
 	idLabel.TextSize = 14
 	idLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 	idLabel.Text = "ID : " .. server.id
-    idLabel.ZIndex = 4
+	idLabel.ZIndex = 4
 
 	-- Les buttons rejoint pour tout les Servers public obtenu
 
@@ -1718,28 +1744,28 @@ local SCRIPT_SOURCE_SERVER_FINDER_DELUXE = [=[
 loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/refs/heads/main/Finder_Servers_Code.luau"))()
 ]=]
 
-    local RejoinButton = Instance.new("ImageButton")
-	RejoinButton.Parent = mainFrame
-	RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
-	RejoinButton.Size = UDim2.new(0, 40, 0, 40)
-	RejoinButton.Position = UDim2.new(0.5, 204, 0.5, -220)
-	RejoinButton.Image = "rbxassetid://103864549538113"
-	RejoinButton.BackgroundTransparency = 1
-	RejoinButton.ZIndex = 10
+local RejoinButton = Instance.new("ImageButton")
+RejoinButton.Parent = mainFrame
+RejoinButton.AnchorPoint = Vector2.new(0.5, 0.5)
+RejoinButton.Size = UDim2.new(0, 40, 0, 40)
+RejoinButton.Position = UDim2.new(0.5, 204, 0.5, -220)
+RejoinButton.Image = "rbxassetid://103864549538113"
+RejoinButton.BackgroundTransparency = 1
+RejoinButton.ZIndex = 10
 
-	RejoinButton.MouseButton1Click:Connect(function()
-		NotificationLib:Notify({
-			Title = string.format("Time used: %.3f s", os.clock() - startTime),
-			Message = getTranslatedMessage(),
-			Type = "info",
-			Duration = 5
-		})
+RejoinButton.MouseButton1Click:Connect(function()
+	NotificationLib:Notify({
+		Title = string.format("Time used: %.3f s", os.clock() - startTime),
+		Message = getTranslatedMessage(),
+		Type = "info",
+		Duration = 5
+	})
 
-		queue_on_teleport(SCRIPT_SOURCE_SERVER_FINDER_DELUXE)
-		task.wait(1)
+	queue_on_teleport(SCRIPT_SOURCE_SERVER_FINDER_DELUXE)
+	task.wait(1)
 
-		TeleportService:Teleport(game.PlaceId, LocalPlayer)
-	end)
+	TeleportService:Teleport(game.PlaceId, LocalPlayer)
+end)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1952,60 +1978,60 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.4"
+local version = "5.5"
 
 local translations = {
-	fr = {
+	["fr"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "Script Server Finder Deluxe lancé !!!",
 		contact = "Si vous avez un problème avec le script, contactez maxproglitcher sur Discord.",
 	},
-	en = {
+	["en"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "Script Server Finder Deluxe is executed !!!",
 		contact = "If you have a problem with the script, contact maxproglitcher on Discord.",
 	},
-	es = {
+	["es"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "¡Script Server Finder Deluxe ejecutado!",
 		contact = "Si tienes un problema con el script, contacta a maxproglitcher en Discord.",
 	},
-	de = {
+	["de"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "Script Server Finder Deluxe wurde ausgeführt!",
 		contact = "Bei Problemen mit dem Skript kontaktiere maxproglitcher auf Discord.",
 	},
-	it = {
+	["it"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "Script Server Finder Deluxe eseguito!",
 		contact = "Se hai problemi con lo script, contatta maxproglitcher su Discord.",
 	},
-	pt = {
+	["pt"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "Script Server Finder Deluxe executado!",
 		contact = "Se você tiver problemas com o script, contate maxproglitcher no Discord.",
 	},
-	ru = {
+	["ru"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "Скрипт Server Finder Deluxe запущен!",
 		contact = "Если у вас есть проблемы со скриптом, свяжитесь с maxproglitcher в Discord.",
 	},
-	zh = {
+	["zh"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "脚本 Server Finder Deluxe 已执行！",
 		contact = "如果您遇到脚本问题，请在 Discord 上联系 maxproglitcher。",
 	},
-	tr = {
+	["tr"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "Script Server Finder Deluxe çalıştırıldı!",
 		contact = "Script ile ilgili bir sorun yaşarsanız, Discord üzerinden maxproglitcher ile iletişime geçin.",
 	},
-	ja = {
+	["ja"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "スクリプト Server Finder Deluxe を実行しました！",
 		contact = "スクリプトに問題がある場合は、Discord で maxproglitcher に連絡してください。",
 	},
-	ar = {
+	["ar"] = {
 		line = "-------------------------------------------------------------------------------------",
 		executed = "تم تنفيذ سكربت Server Finder Deluxe!",
 		contact = "إذا واجهت مشكلة في السكربت، تواصل مع maxproglitcher على ديسكورد.",
@@ -2023,5 +2049,5 @@ Modules.print("Grey", "Version "..version, 20)
 Modules.print("Grey", msg.line, 20)
 Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
-Modules.ZIndex = 20
 --------------------------------------------------------------------------------------------------------------------
+
