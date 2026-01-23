@@ -832,7 +832,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.5"
+versionLabel.Text = "v5.6"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1415,13 +1415,25 @@ maxPlayersBtn.BackgroundTransparency = 1
 maxPlayersBtn.ZIndex = 5
 
 lowPlayersBtn.MouseButton1Click:Connect(function()
-	local sorted = sortServers(allServers, "lowPlayers")
-	updateServerList(sorted)
+	local ok, err = pcall(function()
+		local sorted = sortServers(allServers, "lowPlayers")
+		updateServerList(sorted)
+	end)
+
+	if not ok then
+		warn("API error during lowPlayers. Please try again!", err)
+	end
 end)
 
 maxPlayersBtn.MouseButton1Click:Connect(function()
-	local sorted = sortServers(allServers, "maxPlayers")
-	updateServerList(sorted)
+	local ok, err = pcall(function()
+		local sorted = sortServers(allServers, "maxPlayers")
+		updateServerList(sorted)
+	end)
+
+	if not ok then
+		warn("API error during MaxPlayers. Please try again!", err)
+	end
 end)
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1587,7 +1599,7 @@ closeBtn.Image = "http://www.roblox.com/asset/?id=138896199949173"
 closeBtn.BackgroundTransparency = 1
 closeBtn.ZIndex = 6
 
-closeBtn.MouseButton1Click:Connect(function()
+closeBtn.MouseButton1Click:Connect(function()	
 	_G.SFD_LOADED = false
 	_G.SFD_CAN_RELOAD = true
 	screenGui:Destroy()
@@ -1978,7 +1990,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.5"
+local version = "5.6"
 
 local translations = {
 	["fr"] = {
@@ -2050,4 +2062,3 @@ Modules.print("Grey", msg.line, 20)
 Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
 --------------------------------------------------------------------------------------------------------------------
-
