@@ -832,7 +832,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.6"
+versionLabel.Text = "v5.7"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1106,8 +1106,15 @@ local function CreateServerFrame(server)
 	joinButton.ZIndex = 4
 
 	joinButton.MouseButton1Click:Connect(function()
+		local ok, err = pcall(function()
 		TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, LocalPlayer)
 	end)
+
+    if not ok then
+		warn("An error occurred on the join button. Please try again.", err)
+	end
+end)
+
 
 	-- Les boutons Copy Server ID
 
@@ -1122,12 +1129,19 @@ local function CreateServerFrame(server)
 	copyJoinButton.ZIndex = 4
 
 	copyJoinButton.MouseButton1Click:Connect(function()
+		local ok, err = pcall(function()
 		local joinCommand = "Roblox.GameLauncher.joinGameInstance(" .. game.PlaceId .. ', "' .. server.id .. '")'
 		setclipboard(joinCommand)
 	end)
 
+	if not ok then
+		warn("An error occurred on the copy join button. Please try again.", err)
+	end
+end)
+
 	table.insert(serverFrames, serverFrame)
 end
+ 
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1199,7 +1213,7 @@ function refreshServers()
 		allServers = servers[1] or {}
 		updateServerList(allServers)
 	else
-		warn("No server found or API error")
+		warn("No server found or API error.")
 		showErrorTween()
 	end
 end
@@ -1421,7 +1435,7 @@ lowPlayersBtn.MouseButton1Click:Connect(function()
 	end)
 
 	if not ok then
-		warn("API error during lowPlayers. Please try again!", err)
+		warn("API error during lowPlayers. Please try again.", err)
 	end
 end)
 
@@ -1432,7 +1446,7 @@ maxPlayersBtn.MouseButton1Click:Connect(function()
 	end)
 
 	if not ok then
-		warn("API error during MaxPlayers. Please try again!", err)
+		warn("API error during MaxPlayers. Please try again.", err)
 	end
 end)
 --------------------------------------------------------------------------------------------------------------------
@@ -1575,6 +1589,7 @@ CopyGamelive.BackgroundTransparency = 1
 CopyGamelive.ZIndex = 6
 
 CopyGamelive.MouseButton1Click:Connect(function()
+	local success, err = pcall(function()
 	local currentServerId = game.JobId
 	local joinCommand = 'Roblox.GameLauncher.joinGameInstance('..game.PlaceId..',"'..currentServerId..'")'
 	setclipboard(joinCommand)
@@ -1586,6 +1601,10 @@ CopyGamelive.MouseButton1Click:Connect(function()
 	})
 end)
 
+if not success then
+		warn("An error occurred on the copy server button. Please try again", err)
+	end
+end)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1766,7 +1785,8 @@ RejoinButton.BackgroundTransparency = 1
 RejoinButton.ZIndex = 10
 
 RejoinButton.MouseButton1Click:Connect(function()
-	NotificationLib:Notify({
+local success, err = pcall(function()	
+NotificationLib:Notify({
 		Title = string.format("Time used: %.3f s", os.clock() - startTime),
 		Message = getTranslatedMessage(),
 		Type = "info",
@@ -1777,6 +1797,11 @@ RejoinButton.MouseButton1Click:Connect(function()
 	task.wait(1)
 
 	TeleportService:Teleport(game.PlaceId, LocalPlayer)
+end)
+
+if not success then
+		warn("An error occurred on the button rejoint button servers. Please try again", err)
+	end
 end)
 
 --------------------------------------------------------------------------------------------------------------------
@@ -1990,7 +2015,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.6"
+local version = "5.7"
 
 local translations = {
 	["fr"] = {
