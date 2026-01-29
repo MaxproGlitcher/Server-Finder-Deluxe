@@ -298,56 +298,88 @@ local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 
 
--- ( Si exploit n'a pas la fonction http le script n'ext pas utilisable )
+local hasGetGenv = false
+
+pcall(function()
+	if typeof(getgenv) == "function" then
+		hasGetGenv = true
+	end
+end)
+
 
 local requestFunc
+local httpSuccess = false
 
-local function detectHttp()
-	return pcall(function()
-		if syn and syn.request then
-			requestFunc = syn.request
-		elseif http and http.request then
-			requestFunc = http.request
-		elseif http_request then
-			requestFunc = http_request
-		elseif fluxus and fluxus.request then
-			requestFunc = fluxus.request
-		elseif request then
-			requestFunc = request
-		end
-	end)
-end
-
--- retry sécurisé (2 tentatives)
-local success = false
-for _ = 1, 2 do
-	local ok = detectHttp()
-	if ok and requestFunc then
-		success = true
-		break
+pcall(function()
+	if syn and syn.request then
+		requestFunc = syn.request
+	elseif http and http.request then
+		requestFunc = http.request
+	elseif http_request then
+		requestFunc = http_request
+	elseif fluxus and fluxus.request then
+		requestFunc = fluxus.request
+	elseif request then
+		requestFunc = request
 	end
-	task.wait(0.05)
+end)
+
+if requestFunc then
+	httpSuccess = true
 end
+
 
 local translations = {
-	["fr"] = "Aucune fonction HTTP supportée trouvée ! ⚠️",
-	["en"] = "No supported HTTP request function found! ⚠️",
-	["es"] = "¡No se encontró ninguna función HTTP compatible! ⚠️",
-	["pt"] = "Nenhuma função HTTP suportada encontrada! ⚠️",
-	["tr"] = "Desteklenen HTTP isteği işlevi bulunamadı! ⚠️",
-	["it"] = "Nessuna funzione HTTP supportata trovata! ⚠️",
-	["de"] = "Keine unterstützte HTTP-Anfragefunktion gefunden! ⚠️",
-	["ar"] = "لم يتم العثور على أي دالة HTTP مدعومة! ⚠️",
-	["ja"] = "サポートされているHTTPリクエスト機能が見つかりません！⚠️",
-	["ru"] = "Поддерживаемая функция HTTP-запроса не найдена! ⚠️",
-	["zh"] = "未找到受支持的HTTP请求函数！⚠️",
+	fr = {
+		getgenv = "La fonction getgenv est introuvable ! ⚠️",
+		http = "Aucune fonction HTTP supportée trouvée ! ⚠️"
+	},
+	en = {
+		getgenv = "getgenv function not found! ⚠️",
+		http = "No supported HTTP request function found! ⚠️"
+	},
+	es = {
+		getgenv = "¡Función getgenv no encontrada! ⚠️",
+		http = "¡No se encontró ninguna función HTTP compatible! ⚠️"
+	},
+	pt = {
+		getgenv = "Função getgenv não encontrada! ⚠️",
+		http = "Nenhuma função HTTP suportada encontrada! ⚠️"
+	},
+	tr = {
+		getgenv = "getgenv işlevi bulunamadı! ⚠️",
+		http = "Desteklenen HTTP isteği işlevi bulunamadı! ⚠️"
+	},
+	it = {
+		getgenv = "Funzione getgenv non trovata! ⚠️",
+		http = "Nessuna funzione HTTP supportata trovata! ⚠️"
+	},
+	de = {
+		getgenv = "getgenv-Funktion nicht gefunden! ⚠️",
+		http = "Keine unterstützte HTTP-Anfragefunktion gefunden! ⚠️"
+	},
+	ar = {
+		getgenv = "لم يتم العثور على دالة getgenv! ⚠️",
+		http = "لم يتم العثور على أي دالة HTTP مدعومة! ⚠️"
+	},
+	ja = {
+		getgenv = "getgenv 関数が見つかりません！⚠️",
+		http = "サポートされているHTTPリクエスト機能が見つかりません！⚠️"
+	},
+	ru = {
+		getgenv = "Функция getgenv не найдена! ⚠️",
+		http = "Поддерживаемая функция HTTP-запроса не найдена! ⚠️"
+	},
+	zh = {
+		getgenv = "未找到 getgenv 函数！⚠️",
+		http = "未找到受支持的HTTP请求函数！⚠️"
+	}
 }
 
-local function getTranslatedMessage()
-	local langCode = LocalizationService.RobloxLocaleId:sub(1, 2)
-	return translations[langCode] or translations["en"]
+local function getMessage(key)
+	local lang = LocalizationService.RobloxLocaleId:sub(1,2)
+	return (translations[lang] and translations[lang][key]) or translations.en[key]
 end
-
 
 local NotificationLib = {
 	_notifications = {},
@@ -376,91 +408,89 @@ function NotificationLib:_init()
 	end
 end
 
-function NotificationLib:_calculatePosition(index)
-	local spacing = self._settings.spacing
-	local height = 90
-	return UDim2.new(1, -24, 1, -24 - (index-1)*(height+spacing))
+function NotificationLib:_calculatePosition(i)
+	return UDim2.new(1, -24, 1, -24 - (i-1)*(90 + self._settings.spacing))
 end
 
-function NotificationLib:_animateOut(frame, callback)
-	local tween = TweenService:Create(frame, TweenInfo.new(self._settings.fadeTime, Enum.EasingStyle.Quad), {
-		Position = frame.Position + UDim2.new(0,0,0,self._settings.slideDistance),
-		BackgroundTransparency = 1
-	})
+function NotificationLib:_animateOut(frame)
+	local tween = TweenService:Create(
+		frame,
+		TweenInfo.new(self._settings.fadeTime, Enum.EasingStyle.Quad),
+		{
+			Position = frame.Position + UDim2.new(0,0,0,self._settings.slideDistance),
+			BackgroundTransparency = 1
+		}
+	)
 	tween:Play()
 	tween.Completed:Connect(function()
-		if frame and frame.Parent then frame:Destroy() end
-		if callback then callback() end
+		if frame.Parent then frame:Destroy() end
 	end)
 end
 
 function NotificationLib:Notify(opt)
 	self:_init()
 	opt = opt or {}
-	local title = opt.Title or "Notification"
-	local message = opt.Message or ""
-	local duration = opt.Duration or self._settings.duration
 
 	local frame = Instance.new("Frame")
-	frame.BackgroundColor3 = self._theme.primaryColor
 	frame.Size = UDim2.new(0,340,0,90)
 	frame.AnchorPoint = Vector2.new(1,1)
-	frame.Position = self:_calculatePosition(#self._notifications+1)
+	frame.Position = self:_calculatePosition(#self._notifications + 1)
+	frame.BackgroundColor3 = self._theme.primaryColor
 	frame.Parent = self._container
 	Instance.new("UICorner", frame).CornerRadius = self._theme.cornerRadius
 
-	local icon = Instance.new("ImageLabel", frame)
-	icon.Image = self._icons.info
-	icon.Size = UDim2.new(0,28,0,28)
-	icon.Position = UDim2.new(0,12,0,12)
-	icon.BackgroundTransparency = 1
+	local title = Instance.new("TextLabel", frame)
+	title.Text = opt.Title or "Notification"
+	title.Font = self._theme.font
+	title.TextColor3 = self._theme.textColor
+	title.TextSize = 16
+	title.TextXAlignment = Enum.TextXAlignment.Left
+	title.BackgroundTransparency = 1
+	title.Size = UDim2.new(1,-60,0,22)
+	title.Position = UDim2.new(0,48,0,10)
 
-	local titleLabel = Instance.new("TextLabel", frame)
-	titleLabel.Font = self._theme.font
-	titleLabel.TextColor3 = self._theme.textColor
-	titleLabel.TextSize = 16
-	titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-	titleLabel.Text = title
-	titleLabel.BackgroundTransparency = 1
-	titleLabel.Size = UDim2.new(1,-60,0,22)
-	titleLabel.Position = UDim2.new(0,48,0,10)
-
-	local msgLabel = Instance.new("TextLabel", frame)
-	msgLabel.Font = Enum.Font.Gotham
-	msgLabel.TextColor3 = self._theme.textColor
-	msgLabel.TextSize = 14
-	msgLabel.TextWrapped = true
-	msgLabel.TextXAlignment = Enum.TextXAlignment.Left
-	msgLabel.Text = message
-	msgLabel.BackgroundTransparency = 1
-	msgLabel.Size = UDim2.new(1,-60,0,48)
-	msgLabel.Position = UDim2.new(0,48,0,30)
+	local msg = Instance.new("TextLabel", frame)
+	msg.Text = opt.Message or ""
+	msg.Font = Enum.Font.Gotham
+	msg.TextColor3 = self._theme.textColor
+	msg.TextSize = 14
+	msg.TextWrapped = true
+	msg.TextXAlignment = Enum.TextXAlignment.Left
+	msg.BackgroundTransparency = 1
+	msg.Size = UDim2.new(1,-60,0,48)
+	msg.Position = UDim2.new(0,48,0,30)
 
 	table.insert(self._notifications, frame)
 
-	task.delay(duration, function()
-		if frame and frame.Parent then
-			self:_animateOut(frame,function()
-				for i,v in ipairs(self._notifications) do
-					if v==frame then table.remove(self._notifications,i); break end
-				end
-			end)
-		end
+	task.delay(opt.Duration or self._settings.duration, function()
+		self:_animateOut(frame)
 	end)
 end
 
-if not success then
-	warn("HTTP ERROR , No supported HTTP request function found!")
 
-	-- Si aucune fonction HTTP trouvée : affiche notif et stop
 
+if not hasGetGenv then
+	warn("[EXPLOIT WARNING] getgenv function not found")
 	NotificationLib:Notify({
-		Title = "HTTP ERROR",
-		Message = getTranslatedMessage(),
+		Title = "EXPLOIT WARNING",
+		Message = getMessage("getgenv"),
 		Duration = 5
 	})
-	return
 end
+
+if not httpSuccess then
+	warn("[HTTP WARNING] No supported HTTP request function found")
+	NotificationLib:Notify({
+		Title = "HTTP WARNING",
+		Message = getMessage("http"),
+		Duration = 5
+	})
+end
+
+
+_G.MISSING_GETGENV = not hasGetGenv
+_G.MISSING_HTTP = not httpSuccess
+
 --------------------------------------------------------------------------------------------------------------------
 
 local screenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
@@ -558,12 +588,12 @@ task.defer(loadLogo)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Message Fête events et traduction
+
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
 
--- 🎉 Détection des périodes spéciales (protégée par pcall)
+
 local isXmas, isNewYear, isEaster, isHalloween, isValentine = false, false, false, false, false
 
 pcall(function()
@@ -765,7 +795,7 @@ function NotificationLib:Notify(opt)
 	end)
 end
 
--- 💌 Notification automatique selon la fête détectée
+
 local eventName
 local message
 
@@ -832,7 +862,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.7"
+versionLabel.Text = "v5.8"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -840,7 +870,6 @@ versionLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Détection des périodes spéciales
 
 local isXmas = false
 local isHalloween = false
@@ -857,7 +886,7 @@ pcall(function()
 	isValentineDay = (date.month == 2 and date.day == 14)
 end)
 
--- Fonction pour appliquer les effets de texte
+
 local function decorateTitle(startEmoji, endEmoji)
 	title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
 	title.TextScaled = false
@@ -866,7 +895,7 @@ local function decorateTitle(startEmoji, endEmoji)
 end
 
 
--- Effet Noël
+
 if isXmas then
 	decorateTitle("🎄", "🎄")
 	local cycleColors = {
@@ -903,7 +932,7 @@ if isHalloween then
 	end)
 end
 
--- Effet Nouvel An
+
 if isNewYear then
 	decorateTitle("🎉", "🎉")
 	local cycleColors = {
@@ -921,7 +950,7 @@ if isNewYear then
 	end)
 end
 
--- Effet Pâques
+
 if isEaster then
 	decorateTitle("🐰", "🐰")
 	local cycleColors = {
@@ -941,7 +970,7 @@ if isEaster then
 	end)
 end
 
--- Effet ValentineDay
+
 if isValentineDay then
 	decorateTitle("💗", "💗")
 	local cycleColors = { 
@@ -960,7 +989,7 @@ if isValentineDay then
 end
 
 
--- Si aucune fête, retour à la normale
+
 if not isXmas and not isHalloween and not isNewYear and not isEaster and not isValentineDay then
 	title.Text = "Server Finder Deluxe"
 	title.Position = UDim2.new(0, 0, 0, 0)
@@ -1111,7 +1140,7 @@ local function CreateServerFrame(server)
 	end)
 
     if not ok then
-		warn("An error occurred on the join button. Please try again.", err)
+	     warn("An error occurred on the join button. Please try again.", err)
 	end
 end)
 
@@ -1232,12 +1261,12 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Fonction de notification d'erreur
+
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
 
--- Traductions
+
 local langText = {
 	["fr"] = "Erreur de chargement. Réessaie.",
 	["en"] = "Error loading. Please try again.",
@@ -1358,7 +1387,7 @@ function NotificationLib:Notify(opt)
 	end)
 end
 
--- Bouton Refresh 
+
 local function CreateRefreshButton(mainFrame)
 	local refreshBtn = Instance.new("ImageButton")
 	refreshBtn.Parent = mainFrame
@@ -1451,7 +1480,7 @@ maxPlayersBtn.MouseButton1Click:Connect(function()
 end)
 --------------------------------------------------------------------------------------------------------------------
 
--- Buttons pour copy le server public ou nous somme live!!!
+
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
@@ -1579,7 +1608,7 @@ function NotificationLib:Notify(opt)
 	end)
 end
 
--- Bouton CopyGamelive avec notif
+
 local CopyGamelive = Instance.new("ImageButton", mainFrame)
 CopyGamelive.AnchorPoint = Vector2.new(0.5,0.5)
 CopyGamelive.Size = UDim2.new(0,41,0,41)
@@ -1626,7 +1655,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Le Code du button Rejoin pour relancer le jeux dans le même servers publics
+
 
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
@@ -1806,7 +1835,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Button Resize Button
+
 
 local resizeButton = Instance.new("ImageButton", mainFrame)
 resizeButton.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -2015,7 +2044,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.7"
+local version = "5.8"
 
 local translations = {
 	["fr"] = {
