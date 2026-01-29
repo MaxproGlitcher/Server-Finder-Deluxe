@@ -376,10 +376,11 @@ local translations = {
 	}
 }
 
-local function getMessage(key)
-	local lang = LocalizationService.RobloxLocaleId:sub(1,2)
-	return (translations[lang] and translations[lang][key]) or translations.en[key]
+local function getTranslatedMessage()
+	local langCode = (LocalizationService.RobloxLocaleId or "en"):sub(1,2)
+	return langText[langCode] or langText["en"]
 end
+
 
 local NotificationLib = {
 	_notifications = {},
