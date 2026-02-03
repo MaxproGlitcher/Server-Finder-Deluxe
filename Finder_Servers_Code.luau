@@ -178,31 +178,43 @@ elseif isValentine then
 		Color3.fromRGB(255,85,127)})
 end
 
+
 local loading = true
-task.spawn(function()
-	while loading and status.Parent do
-		for i = 1, 3 do
-			status.Text = "Loading" .. string.rep(".", i)
+
+pcall(function()
+	task.spawn(function()
+		while loading and status and status.Parent do
+			for i = 1, 3 do
+				if not loading then break end
+				status.Text = "Loading" .. string.rep(".", i)
+				task.wait(0.4)
+			end
+			if not loading then break end
+			status.Text = "Loading"
 			task.wait(0.4)
 		end
-		status.Text = "Loading"
-		task.wait(0.4)
+	end)
+end)
+
+
+pcall(function()
+	local duration = 2
+	TweenService:Create(
+		bar,
+		TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+		{ Size = UDim2.new(1, 0, 1, 0) }
+	):Play()
+
+	for i = 0, 100 do
+		if not percent or not percent.Parent then break end
+		percent.Text = i .. "%"
+		task.wait(duration / 100)
 	end
 end)
 
--- Animation
-local duration = 2
-TweenService:Create(bar, TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-	Size = UDim2.new(1, 0, 1, 0)
-}):Play()
-
-for i = 0, 100 do
-	percent.Text = i .. "%"
-	task.wait(duration / 100)
-end
-
-loading = false   
+loading = false
 status.Text = "Success"
+
 task.wait(0.30)
 
 if blur then
@@ -1089,7 +1101,8 @@ local function CreateServerFrame(server)
 	infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	infoLabel.ZIndex = 3
 	local fps = math.floor(1000 / (server.ping or 1))
-	infoLabel.Text = "Ping : " .. (server.ping or "N/A") ..
+	infoLabel.Text = 
+	    "Ping : " .. (server.ping or "N/A") ..
 		"\nFPS : " .. fps ..
 		"\nPlayers : " .. server.playing .. "/" .. server.maxPlayers
 
