@@ -114,6 +114,18 @@ credit.TextColor3 = Color3.fromRGB(170, 170, 170)
 credit.TextXAlignment = Enum.TextXAlignment.Right
 credit.Text = "By MaxproGlitcher"
 
+local discord = Instance.new("TextLabel")
+discord.Parent = main
+discord.BackgroundTransparency = 1
+discord.Size = UDim2.new(0, 220, 0, 20)
+discord.Position = UDim2.new(0, 10, 1, -30) 
+discord.Font = Enum.Font.Gotham
+discord.TextSize = 16
+discord.TextColor3 = Color3.fromRGB(170, 170, 170)
+discord.TextXAlignment = Enum.TextXAlignment.Left
+discord.Text = "Discord : maxproglitcher"
+
+
 local isXmas, isHalloween, isNewYear, isEaster, isValentine = false, false, false, false, false
 
 pcall(function()
@@ -139,8 +151,13 @@ local function cycle(colors)
 			versionLabel.TextColor3 = c
 			status.TextColor3 = c
 			credit.TextColor3 = c
-			bar.BackgroundColor3 = c
 			percent.TextColor3 = c
+			bar.BackgroundColor3 = c
+			
+			if discord then
+				discord.TextColor3 = c
+			end
+			
 			i = i % #colors + 1
 			task.wait(0.5)
 		end
@@ -239,19 +256,22 @@ if not game:IsLoaded() then game.Loaded:Wait() end
 
 -- Compatibilité getgenv
 
-if game:GetService("CoreGui"):FindFirstChild("incognito") then
-	oldstring = loadstring
-	getfenv().loadstring = function(code)
-		local source = code
-		source = source:gsub("(%a+)%s*([%+%-%*/])=%s*", "%1 = %1 %2 ")
-		return oldstring(source)
+pcall(function()
+	if game:GetService("CoreGui"):FindFirstChild("incognito") then
+		local oldstring = loadstring
+		getfenv().loadstring = function(code)
+			local source = code
+			source = source:gsub("(%a+)%s*([%+%-%*/])=%s*", "%1 = %1 %2 ")
+			return oldstring(source)
+		end
 	end
-end
-if not getgenv then
-	getfenv().getgenv = function(layer)
-		return getfenv(layer)
+
+	if not getgenv then
+		getfenv().getgenv = function(layer)
+			return getfenv(layer)
+		end
 	end
-end
+end)
 
 getgenv().NextServer = nil
 getgenv().HasScannedAll = false
@@ -303,7 +323,6 @@ local VREnabled = game:GetService("VRService").VREnabled
 local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
 
 local httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
-
 
 --------------------------------------------------------------------------------------------------------------------
 local LocalizationService = game:GetService("LocalizationService")
@@ -875,7 +894,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.8"
+versionLabel.Text = "v5.9"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1661,10 +1680,15 @@ closeBtn.Image = "http://www.roblox.com/asset/?id=138896199949173"
 closeBtn.BackgroundTransparency = 1
 closeBtn.ZIndex = 6
 
-closeBtn.MouseButton1Click:Connect(function()	
-	_G.SFD_LOADED = false
-	_G.SFD_CAN_RELOAD = true
-	screenGui:Destroy()
+closeBtn.MouseButton1Click:Connect(function()
+	pcall(function()
+		_G.SFD_LOADED = false
+		_G.SFD_CAN_RELOAD = true
+		
+		if screenGui then
+			screenGui:Destroy()
+		end
+	end)
 end)
 
 --------------------------------------------------------------------------------------------------------------------
@@ -2024,6 +2048,8 @@ end)
 -- Notification pour me contacter au cas problème pour le Script Server Finder Deluxe
 -- Impression de texte personnalisé pour la console roblox
 -- Impression de Texte Traduits pour pluiseurs langues
+
+pcall(function()
 local Modules = {
 	Colors = {
 		["Grey"] = "254, 254, 254",
@@ -2058,7 +2084,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.8"
+local version = "5.9"
 
 local translations = {
 	["fr"] = {
@@ -2129,4 +2155,6 @@ Modules.print("Grey", "Version "..version, 20)
 Modules.print("Grey", msg.line, 20)
 Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
+end)
 --------------------------------------------------------------------------------------------------------------------
+
