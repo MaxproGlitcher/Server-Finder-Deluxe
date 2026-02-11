@@ -287,6 +287,7 @@ local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 local VRService = game:GetService("VRService")
 local CaptureService = game:GetService("CaptureService")
+local SoundService = game:GetService("SoundService")
 
 local camera = workspace.CurrentCamera or workspace:FindFirstChildOfClass("Camera")
 if not camera then
@@ -894,7 +895,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v5.9"
+versionLabel.Text = "v6.0"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1106,8 +1107,7 @@ local function CreateServerFrame(server)
 	serverFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 	serverFrame.BorderSizePixel = 0
 
-	-- Textlabel Pour le nombre de joueurs, ping du servers , et le nombre Maximal du servers public.
-
+	-- TextLabel pour le nombre de joueurs, ping et FPS
 	local infoLabel = Instance.new("TextLabel", serverFrame)
 	infoLabel.Size = UDim2.new(0, 300, 0, 60)
 	infoLabel.Position = UDim2.new(0, 10, 0, 10)
@@ -1122,11 +1122,10 @@ local function CreateServerFrame(server)
 	local fps = math.floor(1000 / (server.ping or 1))
 	infoLabel.Text = 
 	    "Ping : " .. (server.ping or "N/A") ..
-		"\nFPS : " .. fps ..
-		"\nPlayers : " .. server.playing .. "/" .. server.maxPlayers
+	    "\nFPS : " .. fps ..
+	    "\nPlayers : " .. server.playing .. "/" .. server.maxPlayers
 
-	-- ID du Jeux 
-
+	-- ID du jeu
 	local placeIdLabel = Instance.new("TextLabel", serverFrame)
 	placeIdLabel.Size = UDim2.new(0, 300, 0, 20)
 	placeIdLabel.Position = UDim2.new(0, 10, 0, 76)
@@ -1140,8 +1139,7 @@ local function CreateServerFrame(server)
 	placeIdLabel.Text = "Game ID : " .. tostring(game.PlaceId)
 	placeIdLabel.ZIndex = 4
 
-	-- ID des Servers Publics
-
+	-- ID du serveur public
 	local idLabel = Instance.new("TextLabel", serverFrame)
 	idLabel.Size = UDim2.new(0, 300, 0, 20)
 	idLabel.Position = UDim2.new(0, 10, 0, 94)
@@ -1155,8 +1153,7 @@ local function CreateServerFrame(server)
 	idLabel.Text = "ID : " .. server.id
 	idLabel.ZIndex = 4
 
-	-- Les buttons rejoint pour tout les Servers public obtenu
-
+	-- Bouton Join
 	local joinButton = Instance.new("TextButton", serverFrame)
 	joinButton.Size = UDim2.new(0, 100, 0, 40)
 	joinButton.Position = UDim2.new(1, -110, 0.5, -20)
@@ -1167,18 +1164,26 @@ local function CreateServerFrame(server)
 	joinButton.TextSize = 18
 	joinButton.ZIndex = 4
 
+	local clickSound = Instance.new("Sound", joinButton)
+	clickSound.SoundId = "rbxassetid://9120093264"
+	clickSound.Volume = 1
+	clickSound.PlayOnRemove = false
+
 	joinButton.MouseButton1Click:Connect(function()
+		local soundOk, soundErr = pcall(function()
+			clickSound:Play()
+		end)
+		if not soundOk then
+			warn("Failed to play click sound Join:", soundErr)
+		end
+
 		local ok, err = pcall(function()
-		TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, LocalPlayer)
+			TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, LocalPlayer)
+		end)
+		if not ok then
+			warn("An error occurred on the join button. Please try again.", err)
+		end
 	end)
-
-    if not ok then
-	     warn("An error occurred on the join button. Please try again.", err)
-	end
-end)
-
-
-	-- Les boutons Copy Server ID
 
 	local copyJoinButton = Instance.new("TextButton", serverFrame)
 	copyJoinButton.Size = UDim2.new(0, 100, 0, 30)
@@ -1190,20 +1195,30 @@ end)
 	copyJoinButton.TextSize = 16
 	copyJoinButton.ZIndex = 4
 
-	copyJoinButton.MouseButton1Click:Connect(function()
-		local ok, err = pcall(function()
-		local joinCommand = "Roblox.GameLauncher.joinGameInstance(" .. game.PlaceId .. ', "' .. server.id .. '")'
-		setclipboard(joinCommand)
-	end)
+	local clickSoundCopy = Instance.new("Sound", copyJoinButton)
+	clickSoundCopy.SoundId = "rbxassetid://9120093264"
+	clickSoundCopy.Volume = 1
+	clickSoundCopy.PlayOnRemove = false
 
-	if not ok then
-		warn("An error occurred on the copy join button. Please try again.", err)
-	end
-end)
+	copyJoinButton.MouseButton1Click:Connect(function()
+		local soundOk, soundErr = pcall(function()
+			clickSoundCopy:Play()
+		end)
+		if not soundOk then
+			warn("Failed to play click sound CopyJoin:", soundErr)
+		end
+
+		local ok, err = pcall(function()
+			local joinCommand = 'Roblox.GameLauncher.joinGameInstance(' .. game.PlaceId .. ', "' .. server.id .. '")'
+			setclipboard(joinCommand)
+		end)
+		if not ok then
+			warn("An error occurred on the copy join button. Please try again.", err)
+		end
+	end)
 
 	table.insert(serverFrames, serverFrame)
 end
- 
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1431,7 +1446,20 @@ local function CreateRefreshButton(mainFrame)
 	refreshBtn.BackgroundTransparency = 1
 	refreshBtn.ZIndex = 7
 
+	local clickSound = Instance.new("Sound", refreshBtn)
+	clickSound.SoundId = "rbxassetid://9120093264"
+	clickSound.Volume = 1
+	clickSound.PlayOnRemove = false
+
 	refreshBtn.MouseButton1Click:Connect(function()
+
+		local soundOk, soundErr = pcall(function()
+			clickSound:Play()
+		end)
+		if not soundOk then
+			warn("Failed to play click sound refresh:", soundErr)
+		end
+
 		local success, err = pcall(refreshServers)
 		if not success then
 			NotificationLib:Notify({
@@ -1450,8 +1478,7 @@ local refreshBtn = CreateRefreshButton(mainFrame)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Le button Low Players et Max Players
-
+-- Fonction pour trier les serveurs
 local function sortServers(servers, currentSort)
 	if typeof(servers) ~= "table" then return {} end
 
@@ -1473,7 +1500,6 @@ local function sortServers(servers, currentSort)
 end
 
 
-
 local lowPlayersBtn = Instance.new("ImageButton", mainFrame)
 lowPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
 lowPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
@@ -1490,27 +1516,52 @@ maxPlayersBtn.Image = "http://www.roblox.com/asset/?id=117409611207958"
 maxPlayersBtn.BackgroundTransparency = 1
 maxPlayersBtn.ZIndex = 5
 
+
+local clickSoundLow = Instance.new("Sound", lowPlayersBtn)
+clickSoundLow.SoundId = "rbxassetid://9120093264"
+clickSoundLow.Volume = 1
+clickSoundLow.PlayOnRemove = false
+
+local clickSoundMax = Instance.new("Sound", maxPlayersBtn)
+clickSoundMax.SoundId = "rbxassetid://9120093264"
+clickSoundMax.Volume = 1
+clickSoundMax.PlayOnRemove = false
+
+
 lowPlayersBtn.MouseButton1Click:Connect(function()
+	local soundOk, soundErr = pcall(function()
+		clickSoundLow:Play()
+	end)
+	if not soundOk then
+		warn("Failed to play click sound lowPlayers:", soundErr)
+	end
+
 	local ok, err = pcall(function()
 		local sorted = sortServers(allServers, "lowPlayers")
 		updateServerList(sorted)
 	end)
-
 	if not ok then
 		warn("API error during lowPlayers. Please try again.", err)
 	end
 end)
 
 maxPlayersBtn.MouseButton1Click:Connect(function()
+	local soundOk, soundErr = pcall(function()
+		clickSoundMax:Play()
+	end)
+	if not soundOk then
+		warn("Failed to play click sound maxPlayers:", soundErr)
+	end
+
 	local ok, err = pcall(function()
 		local sorted = sortServers(allServers, "maxPlayers")
 		updateServerList(sorted)
 	end)
-
 	if not ok then
 		warn("API error during MaxPlayers. Please try again.", err)
 	end
 end)
+
 --------------------------------------------------------------------------------------------------------------------
 
 
@@ -1643,30 +1694,43 @@ end
 
 
 local CopyGamelive = Instance.new("ImageButton", mainFrame)
-CopyGamelive.AnchorPoint = Vector2.new(0.5,0.5)
-CopyGamelive.Size = UDim2.new(0,41,0,41)
-CopyGamelive.Position = UDim2.new(0.5,-227,0.5,-220)
+CopyGamelive.AnchorPoint = Vector2.new(0.5, 0.5)
+CopyGamelive.Size = UDim2.new(0, 41, 0, 41)
+CopyGamelive.Position = UDim2.new(0.5, -227, 0.5, -220)
 CopyGamelive.Image = "http://www.roblox.com/asset/?id=122024633828045"
 CopyGamelive.BackgroundTransparency = 1
 CopyGamelive.ZIndex = 6
 
+local clickSoundCopyLive = Instance.new("Sound", CopyGamelive)
+clickSoundCopyLive.SoundId = "rbxassetid://9120093264"
+clickSoundCopyLive.Volume = 1
+clickSoundCopyLive.PlayOnRemove = false
+
 CopyGamelive.MouseButton1Click:Connect(function()
+	
+	local soundOk, soundErr = pcall(function()
+		clickSoundCopyLive:Play()
+	end)
+	if not soundOk then
+		warn("Failed to play click sound CopyGamelive:", soundErr)
+	end
+
 	local success, err = pcall(function()
-	local currentServerId = game.JobId
-	local joinCommand = 'Roblox.GameLauncher.joinGameInstance('..game.PlaceId..',"'..currentServerId..'")'
-	setclipboard(joinCommand)
+		local currentServerId = game.JobId
+		local joinCommand = 'Roblox.GameLauncher.joinGameInstance(' .. game.PlaceId .. ',"' .. currentServerId .. '")'
+		setclipboard(joinCommand)
 
-	NotificationLib:Notify({
-		Title = "Server ID",
-		Message = getTranslatedMessage(),
-		Duration = 4
-	})
-end)
-
-if not success then
+		NotificationLib:Notify({
+			Title = "Server ID",
+			Message = getTranslatedMessage(),
+			Duration = 4
+		})
+	end)
+	if not success then
 		warn("An error occurred on the copy server button. Please try again", err)
 	end
 end)
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1680,16 +1744,32 @@ closeBtn.Image = "http://www.roblox.com/asset/?id=138896199949173"
 closeBtn.BackgroundTransparency = 1
 closeBtn.ZIndex = 6
 
+local clickSoundClose = Instance.new("Sound")
+clickSoundClose.SoundId = "rbxassetid://9120093264"
+clickSoundClose.Volume = 1
+clickSoundClose.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui") -- Mettre le son dans PlayerGui
+
 closeBtn.MouseButton1Click:Connect(function()
-	pcall(function()
-		_G.SFD_LOADED = false
-		_G.SFD_CAN_RELOAD = true
-		
-		if screenGui then
-			screenGui:Destroy()
-		end
+	local soundOk, soundErr = pcall(function()
+		clickSoundClose:Play()
+	end)
+	if not soundOk then
+		warn("Failed to play click sound closeBtn:", soundErr)
+	end
+
+	
+	task.delay(0.1, function()
+		pcall(function()
+			_G.SFD_LOADED = false
+			_G.SFD_CAN_RELOAD = true
+			if screenGui then
+				screenGui:Destroy()
+			end
+		end)
 	end)
 end)
+
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1838,7 +1918,6 @@ end
 task.wait(0.1)
 
 local SCRIPT_SOURCE_SERVER_FINDER_DELUXE = [=[
-
 loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/refs/heads/main/Finder_Servers_Code.luau"))()
 ]=]
 
@@ -1851,25 +1930,41 @@ RejoinButton.Image = "rbxassetid://103864549538113"
 RejoinButton.BackgroundTransparency = 1
 RejoinButton.ZIndex = 10
 
+
+local clickSoundRejoin = Instance.new("Sound", RejoinButton)
+clickSoundRejoin.SoundId = "rbxassetid://9120093264"
+clickSoundRejoin.Volume = 1
+clickSoundRejoin.PlayOnRemove = false
+
 RejoinButton.MouseButton1Click:Connect(function()
-local success, err = pcall(function()	
-NotificationLib:Notify({
-		Title = string.format("Time used: %.3f s", os.clock() - startTime),
-		Message = getTranslatedMessage(),
-		Type = "info",
-		Duration = 5
-	})
+	
+	local soundOk, soundErr = pcall(function()
+		clickSoundRejoin:Play()
+	end)
+	if not soundOk then
+		warn("Failed to play click sound RejoinButton:", soundErr)
+	end
 
-	queue_on_teleport(SCRIPT_SOURCE_SERVER_FINDER_DELUXE)
-	task.wait(1)
+	
+	local success, err = pcall(function()	
+		NotificationLib:Notify({
+			Title = string.format("Time used: %.3f s", os.clock() - startTime),
+			Message = getTranslatedMessage(),
+			Type = "info",
+			Duration = 5
+		})
 
-	TeleportService:Teleport(game.PlaceId, LocalPlayer)
-end)
+		queue_on_teleport(SCRIPT_SOURCE_SERVER_FINDER_DELUXE)
+		task.wait(1)
 
-if not success then
+		TeleportService:Teleport(game.PlaceId, LocalPlayer)
+	end)
+
+	if not success then
 		warn("An error occurred on the button rejoint button servers. Please try again", err)
 	end
 end)
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1885,8 +1980,21 @@ resizeButton.ZIndex = 9
 
 local isSmall = true -- Définir la taille initiale comme petite
 
--- Fonction pour basculer entre les tailles
+local clickSoundResize = Instance.new("Sound", resizeButton)
+clickSoundResize.SoundId = "rbxassetid://9120093264"
+clickSoundResize.Volume = 1
+clickSoundResize.PlayOnRemove = false
+
+
 local function toggleGuiSize()
+	
+	local soundOk, soundErr = pcall(function()
+		clickSoundResize:Play()
+	end)
+	if not soundOk then
+		warn("Failed to play click sound resizeButton:", soundErr)
+	end
+
 	if isSmall then
 		mainFrame.Size = UDim2.new(0, 650, 0, 500)
 		scrollFrame.Size = UDim2.new(1, -20, 1, -60)
@@ -2084,7 +2192,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "5.9"
+local version = "6.0"
 
 local translations = {
 	["fr"] = {
@@ -2157,4 +2265,3 @@ Modules.print("Grey", msg.contact, 20)
 Modules.print("Grey", msg.line, 20)
 end)
 --------------------------------------------------------------------------------------------------------------------
-
