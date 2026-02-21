@@ -1119,23 +1119,27 @@ local function CreateServerFrame(server)
 	infoLabel.TextSize = 16
 	infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	infoLabel.ZIndex = 3
+	
 	local ping = server.ping or 0
 	local players = server.playing or 0
 	local maxPlayers = server.maxPlayers or 0
-
 	local fps = ping > 0 and math.floor(1000 / ping) or 0
 
 	-- Estimation qualité serveur
-	local quality = "Good"
-	local qualityColor = Color3.fromRGB(0, 255, 0)
+	local quality, qualityColor
+	pcall(function()
+		quality = "Good"
+		qualityColor = Color3.fromRGB(0, 255, 0)
 
-	if ping > 250 or players >= maxPlayers then
-		quality = "Bad"
-		qualityColor = Color3.fromRGB(255, 60, 60)
-	elseif ping > 150 then
-		quality = "Medium"
-		qualityColor = Color3.fromRGB(255, 170, 0)
-	end
+		if ping > 250 or players >= maxPlayers then
+			quality = "Bad"
+			qualityColor = Color3.fromRGB(255, 60, 60)
+		elseif ping > 150 then
+			quality = "Medium"
+			qualityColor = Color3.fromRGB(255, 170, 0)
+		end
+	end)
+
 
 	infoLabel.Text =
 		"Ping : " .. (ping > 0 and ping or "N/A") ..
