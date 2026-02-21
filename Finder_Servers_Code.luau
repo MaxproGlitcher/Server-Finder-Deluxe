@@ -895,7 +895,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 10)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.0"
+versionLabel.Text = "v6.1"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1119,11 +1119,31 @@ local function CreateServerFrame(server)
 	infoLabel.TextSize = 16
 	infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	infoLabel.ZIndex = 3
-	local fps = math.floor(1000 / (server.ping or 1))
-	infoLabel.Text = 
-	    "Ping : " .. (server.ping or "N/A") ..
-	    "\nFPS : " .. fps ..
-	    "\nPlayers : " .. server.playing .. "/" .. server.maxPlayers
+	local ping = server.ping or 0
+	local players = server.playing or 0
+	local maxPlayers = server.maxPlayers or 0
+
+	local fps = ping > 0 and math.floor(1000 / ping) or 0
+
+	-- Estimation qualité serveur
+	local quality = "Good"
+	local qualityColor = Color3.fromRGB(0, 255, 0)
+
+	if ping > 250 or players >= maxPlayers then
+		quality = "Bad"
+		qualityColor = Color3.fromRGB(255, 60, 60)
+	elseif ping > 150 then
+		quality = "Medium"
+		qualityColor = Color3.fromRGB(255, 170, 0)
+	end
+
+	infoLabel.Text =
+		"Ping : " .. (ping > 0 and ping or "N/A") ..
+		"\nFPS : " .. fps ..
+		"\nPlayers : " .. players .. "/" .. maxPlayers ..
+		"\nServer Quality : " .. quality
+
+	infoLabel.TextColor3 = qualityColor
 
 	-- ID du jeu
 	local placeIdLabel = Instance.new("TextLabel", serverFrame)
@@ -2192,7 +2212,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.0"
+local version = "6.1"
 
 local translations = {
 	["fr"] = {
