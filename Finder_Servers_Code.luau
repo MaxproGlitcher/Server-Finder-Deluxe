@@ -328,7 +328,8 @@ local httprequest = (syn and syn.request) or (http and http.request) or http_req
 --------------------------------------------------------------------------------------------------------------------
 local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
-
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
 local hasGetGenv = false
 
@@ -625,6 +626,8 @@ task.defer(loadLogo)
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
 
 local isXmas, isNewYear, isEaster, isHalloween, isValentine = false, false, false, false, false
@@ -1337,6 +1340,8 @@ end)
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
 
 local langText = {
