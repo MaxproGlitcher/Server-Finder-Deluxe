@@ -647,6 +647,8 @@ task.defer(loadLogo)
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
 local function GetEasterDate(year)
 	local A = math.floor(year/100)
@@ -1394,6 +1396,8 @@ end)
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
 
 local langText = {
