@@ -125,16 +125,37 @@ discord.TextColor3 = Color3.fromRGB(170, 170, 170)
 discord.TextXAlignment = Enum.TextXAlignment.Left
 discord.Text = "Discord : maxproglitcher"
 
+local function GetEasterDate(year)
+	local A = math.floor(year/100)
+	local B = math.floor((13+8*A)/25)
+	local C = (15-B+A-math.floor(A/4))%30
+	local D = (4+A-math.floor(A/4))%7
+	local E = (19*(year%19)+C)%30
+	local F = (2*(year%4)+4*(year%7)+6*E+D)%7
+	local G = 22 + E + F
+
+	if E == 29 and F == 6 then
+		return 4, 19
+	elseif E == 28 and F == 6 then
+		return 4, 18
+	elseif G > 31 then
+		return 4, G-31
+	else
+		return 3, G
+	end
+end
+
 
 local isXmas, isHalloween, isNewYear, isEaster, isValentine = false, false, false, false, false
 
 pcall(function()
 	local date = os.date("*t")
+	local emonth, eday = GetEasterDate(date.year)
 	isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
 	isHalloween = (date.month == 10 and date.day >= 23) or (date.month == 11 and date.day <= 1)
 	isNewYear = (date.month == 12 and date.day >= 30) or (date.month == 1 and date.day <= 2)
-	isEaster = (date.month == 3 and date.day >= 31) or (date.month == 4 and date.day <= 15)
 	isValentine = (date.month == 2 and date.day == 14)
+    isEaster = (date.month == emonth and date.day == eday) 
 end)
 
 local function decorate(startEmoji, endEmoji)
@@ -328,8 +349,7 @@ local httprequest = (syn and syn.request) or (http and http.request) or http_req
 --------------------------------------------------------------------------------------------------------------------
 local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+
 
 local hasGetGenv = false
 
@@ -595,12 +615,13 @@ local logo = Instance.new("ImageLabel")
 logo.Name = "BackgroundLogoServeFinderDeluxe"
 logo.Parent = mainFrame
 logo.Size = UDim2.new(0.8, 0, 0.8, 0)
-logo.Position = UDim2.new(0.5, 0, 0.5, 0)
 logo.AnchorPoint = Vector2.new(0.5, 0.5)
+logo.Position = UDim2.new(0.5, 0, 0.5, 0) 
 logo.BackgroundTransparency = 1
 logo.ImageTransparency = 0.88
 logo.ScaleType = Enum.ScaleType.Fit
 logo.ZIndex = 2
+
 
 
 local function loadLogo()
@@ -626,22 +647,40 @@ task.defer(loadLogo)
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
 
+local function GetEasterDate(year)
+	local A = math.floor(year/100)
+	local B = math.floor((13+8*A)/25)
+	local C = (15-B+A-math.floor(A/4))%30
+	local D = (4+A-math.floor(A/4))%7
+	local E = (19*(year%19)+C)%30
+	local F = (2*(year%4)+4*(year%7)+6*E+D)%7
+	local G = 22 + E + F
+
+	if E == 29 and F == 6 then
+		return 4, 19
+	elseif E == 28 and F == 6 then
+		return 4, 18
+	elseif G > 31 then
+		return 4, G-31
+	else
+		return 3, G
+	end
+end
 
 local isXmas, isNewYear, isEaster, isHalloween, isValentine = false, false, false, false, false
 
 pcall(function()
 	local date = os.date("*t")
+	local emonth, eday = GetEasterDate(date.year)
 	isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
 	isHalloween = (date.month == 10 and date.day >= 23) or (date.month == 11 and date.day <= 1)
 	isNewYear = (date.month == 12 and date.day >= 30) or (date.month == 1 and date.day <= 2)
-	isEaster = (date.month == 3 and date.day >= 31) or (date.month == 4 and date.day <= 15)
 	isValentine = (date.month == 2 and date.day == 14)
+	isEaster = (date.month == emonth and date.day == eday)
 end)
 
--- 🌎 Traductions multilingues par fête
+
 local holidayTexts = {
 	Christmas = {
 		["fr"] = "🎄 Joyeux Noël !",
@@ -887,7 +926,7 @@ end)
 
 local title = Instance.new("TextLabel", mainFrame)
 title.Size = UDim2.new(1, 0, 0, 40)
-title.Position = UDim2.new(0, 0, 0, 0)
+title.Position = UDim2.new(0, 5, 0, 0) 
 title.BackgroundTransparency = 1
 title.Text = "Server Finder Deluxe"
 title.Font = Enum.Font.Ubuntu
@@ -896,9 +935,9 @@ title.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
-versionLabel.Position = UDim2.new(0, 10, 0, 10)
+versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.1"
+versionLabel.Text = "v6.2"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -906,28 +945,43 @@ versionLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 --------------------------------------------------------------------------------------------------------------------
 
+local function GetEasterDate(year)
+	local A = math.floor(year/100)
+	local B = math.floor((13+8*A)/25)
+	local C = (15-B+A-math.floor(A/4))%30
+	local D = (4+A-math.floor(A/4))%7
+	local E = (19*(year%19)+C)%30
+	local F = (2*(year%4)+4*(year%7)+6*E+D)%7
+	local G = 22 + E + F
 
-local isXmas = false
-local isHalloween = false
-local isNewYear = false
-local isEaster = false
-local isValentineDay = false
+	if E == 29 and F == 6 then
+		return 4, 19
+	elseif E == 28 and F == 6 then
+		return 4, 18
+	elseif G > 31 then
+		return 4, G-31
+	else
+		return 3, G
+	end
+end
+
+local isXmas, isNewYear, isEaster, isHalloween, isValentine = false, false, false, false, false
 
 pcall(function()
 	local date = os.date("*t")
+	local emonth, eday = GetEasterDate(date.year)
 	isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
 	isHalloween = (date.month == 10 and date.day >= 23) or (date.month == 11 and date.day <= 1)
 	isNewYear = (date.month == 12 and date.day >= 30) or (date.month == 1 and date.day <= 2)
-	isEaster = (date.month == 3 and date.day >= 31) or (date.month == 4 and date.day <= 15)
 	isValentineDay = (date.month == 2 and date.day == 14)
+	isEaster = (date.month == emonth and date.day == eday)
 end)
 
 
 local function decorateTitle(startEmoji, endEmoji)
-	title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
-	title.TextScaled = false
-	title.TextSize = 25
-	title.Position = UDim2.new(0, 0, 0, 2)
+    title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
+    title.TextScaled = false
+    title.TextSize = 25
 end
 
 
@@ -1340,8 +1394,6 @@ end)
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
 
 
 local langText = {
@@ -2221,7 +2273,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.1"
+local version = "6.2"
 
 local translations = {
 	["fr"] = {
