@@ -979,13 +979,12 @@ pcall(function()
 	isEaster = (date.month == emonth and date.day == eday)
 end)
 
-
 local function decorateTitle(startEmoji, endEmoji)
-    title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
-    title.TextScaled = false
-    title.TextSize = 25
+	title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
+	title.TextScaled = false
+	title.TextSize = 25
+	title.Position = UDim2.new(0, 0, 0, 2)
 end
-
 
 
 if isXmas then
