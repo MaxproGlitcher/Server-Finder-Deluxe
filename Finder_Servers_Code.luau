@@ -148,7 +148,7 @@ end
 
 local isXmas, isHalloween, isNewYear, isEaster, isValentine = false, false, false, false, false
 
-pcall(function()
+local success, err = pcall(function()
 	local date = os.date("*t")
 	local emonth, eday = GetEasterDate(date.year)
 	isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
@@ -157,6 +157,10 @@ pcall(function()
 	isValentine = (date.month == 2 and date.day == 14)
     isEaster = (date.month == emonth and date.day == eday) 
 end)
+
+if not success then
+	warn("Date system error for loading gui:", err)
+end
 
 local function decorate(startEmoji, endEmoji)
 	title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
@@ -672,7 +676,7 @@ end
 
 local isXmas, isNewYear, isEaster, isHalloween, isValentine = false, false, false, false, false
 
-pcall(function()
+local success, err = pcall(function()
 	local date = os.date("*t")
 	local emonth, eday = GetEasterDate(date.year)
 	isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
@@ -682,6 +686,9 @@ pcall(function()
 	isEaster = (date.month == emonth and date.day == eday)
 end)
 
+if not success then
+	warn("Date system error for the welcome message:", err)
+end
 
 local holidayTexts = {
 	Christmas = {
@@ -939,7 +946,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.2"
+versionLabel.Text = "v6.3"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -969,7 +976,7 @@ end
 
 local isXmas, isNewYear, isEaster, isHalloween, isValentine = false, false, false, false, false
 
-pcall(function()
+local success, err = pcall(function()
 	local date = os.date("*t")
 	local emonth, eday = GetEasterDate(date.year)
 	isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
@@ -978,6 +985,10 @@ pcall(function()
 	isValentineDay = (date.month == 2 and date.day == 14)
 	isEaster = (date.month == emonth and date.day == eday)
 end)
+
+if not success then
+	warn("Date system error for writing Server Finder Deluxe:", err)
+end
 
 local function decorateTitle(startEmoji, endEmoji)
 	title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
@@ -2276,7 +2287,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.2"
+local version = "6.3"
 
 local translations = {
 	["fr"] = {
