@@ -910,6 +910,131 @@ NotificationLib:Notify({
 	Duration = 6
 })
 
+task.wait(6)
+--------------------------------------------------------------------------------------------------------------------
+
+local TweenService = game:GetService("TweenService")
+local LocalizationService = game:GetService("LocalizationService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local NotificationLib = {
+	_notifications = {},
+	_theme = {
+		primaryColor = Color3.fromRGB(30, 30, 30),
+		textColor = Color3.fromRGB(255, 255, 255),
+		font = Enum.Font.GothamSemibold,
+		cornerRadius = UDim.new(0, 8)
+	},
+	_settings = {
+		duration = 4,
+		spacing = 12,
+		fadeTime = 0.28,
+		slideDistance = 18
+	},
+	_icons = { info = "rbxassetid://9405926389" }
+}
+
+function NotificationLib:_init()
+	if not self._container then
+		self._container = Instance.new("ScreenGui")
+		self._container.Name = "NotificationLibrary"
+		self._container.ResetOnSpawn = false
+		self._container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		self._container.Parent = game:GetService("CoreGui")
+	end
+end
+
+function NotificationLib:_calculatePosition(index)
+	local spacing = self._settings.spacing
+	local height = 90
+	return UDim2.new(1, -24, 1, -24 - (index-1)*(height+spacing))
+end
+
+function NotificationLib:_animateOut(frame, callback)
+	local tween = TweenService:Create(frame, TweenInfo.new(self._settings.fadeTime, Enum.EasingStyle.Quad), {
+		Position = frame.Position + UDim2.new(0,0,0,self._settings.slideDistance),
+		BackgroundTransparency = 1
+	})
+	tween:Play()
+	tween.Completed:Connect(function()
+		if frame and frame.Parent then frame:Destroy() end
+		if callback then callback() end
+	end)
+end
+
+function NotificationLib:Notify(opt)
+	self:_init()
+	opt = opt or {}
+	local title = opt.Title or "Notification"
+	local message = opt.Message or ""
+	local duration = opt.Duration or self._settings.duration
+
+	local frame = Instance.new("Frame")
+	frame.BackgroundColor3 = self._theme.primaryColor
+	frame.Size = UDim2.new(0, 340, 0, 90)
+	frame.AnchorPoint = Vector2.new(1,1)
+	frame.Position = self:_calculatePosition(#self._notifications + 1)
+	frame.Parent = self._container
+	Instance.new("UICorner", frame).CornerRadius = self._theme.cornerRadius
+
+	local icon = Instance.new("ImageLabel", frame)
+	icon.Image = self._icons.info
+	icon.Size = UDim2.new(0,28,0,28)
+	icon.Position = UDim2.new(0,12,0,12)
+	icon.BackgroundTransparency = 1
+
+	local titleLabel = Instance.new("TextLabel", frame)
+	titleLabel.Font = self._theme.font
+	titleLabel.TextColor3 = self._theme.textColor
+	titleLabel.TextSize = 16
+	titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+	titleLabel.Text = title
+	titleLabel.BackgroundTransparency = 1
+	titleLabel.Size = UDim2.new(1,-60,0,22)
+	titleLabel.Position = UDim2.new(0,48,0,10)
+
+	local msgLabel = Instance.new("TextLabel", frame)
+	msgLabel.Font = Enum.Font.Gotham
+	msgLabel.TextColor3 = self._theme.textColor
+	msgLabel.TextSize = 14
+	msgLabel.TextWrapped = true
+	msgLabel.TextXAlignment = Enum.TextXAlignment.Left
+	msgLabel.Text = message
+	msgLabel.BackgroundTransparency = 1
+	msgLabel.Size = UDim2.new(1,-60,0,48)
+	msgLabel.Position = UDim2.new(0,48,0,30)
+
+	table.insert(self._notifications, frame)
+
+	task.delay(duration, function()
+		if frame and frame.Parent then
+			self:_animateOut(frame, function()
+				for i,v in ipairs(self._notifications) do
+					if v == frame then table.remove(self._notifications,i); break end
+				end
+			end)
+		end
+	end)
+end
+
+task.spawn(function()
+	local success, result = pcall(function()
+		return identifyexecutor()
+	end)
+
+	local exploitName = "Unknown"
+
+	if success and result and result ~= "" then
+		exploitName = tostring(result)
+	end
+
+	NotificationLib:Notify({
+		Title = "Exploit Detected",
+		Message = "Exploit detected: " .. exploitName,
+		Duration = 6
+	})
+end)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -946,7 +1071,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.3"
+versionLabel.Text = "v6.4"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -2287,7 +2412,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.3"
+local version = "6.4"
 
 local translations = {
 	["fr"] = {
