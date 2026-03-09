@@ -314,6 +314,15 @@ local VRService = game:GetService("VRService")
 local CaptureService = game:GetService("CaptureService")
 local SoundService = game:GetService("SoundService")
 
+writefile = writefile or getgenv().writefile
+makefolder = makefolder or getgenv().makefolder
+readfile = readfile or getgenv().readfile
+delfolder = delfolder or getgenv().delfolder
+delfile = delfile or getgenv().delfile
+listfiles = listfiles or getgenv().listfiles
+isfolder = isfolder or getgenv().isfolder
+isfile = isfile or getgenv().isfile
+
 local camera = workspace.CurrentCamera or workspace:FindFirstChildOfClass("Camera")
 if not camera then
 	repeat task.wait() camera = workspace.CurrentCamera until camera
