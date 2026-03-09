@@ -620,26 +620,33 @@ logo.Name = "BackgroundLogoServeFinderDeluxe"
 logo.Parent = mainFrame
 logo.Size = UDim2.new(0.8, 0, 0.8, 0)
 logo.AnchorPoint = Vector2.new(0.5, 0.5)
-logo.Position = UDim2.new(0.5, 0, 0.5, 0) 
+logo.Position = UDim2.new(0.5, 0, 0.5, 0)
 logo.BackgroundTransparency = 1
 logo.ImageTransparency = 0.88
 logo.ScaleType = Enum.ScaleType.Fit
 logo.ZIndex = 2
 
+local dir = "NLAssets"
+local file = dir.."/sfd_logo.png"
+local link = "https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/main/Logo%20m%C3%A9tallique%20de%20Server%20Finder%20Deluxe.png"
 
+if not isfolder(dir) then
+	makefolder(dir)
+end
 
 local function loadLogo()
-	repeat
-		if mainFrame.Parent then             
-			local success = pcall(function() 
-				logo.Image = "http://www.roblox.com/asset/?id=75503909317175" 
-			end)
-			if success and logo.Image and logo.Image ~= "" then
-				break 
-			end
+	pcall(function()
+
+		
+		if not isfile(file) then
+			local data = game:HttpGet(link)
+			writefile(file, data)
 		end
-		task.wait(0.5) 
-	until logo.Image and logo.Image ~= ""
+
+		
+		logo.Image = getcustomasset(file)
+
+	end)
 end
 
 task.defer(loadLogo)
@@ -1071,7 +1078,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.4"
+versionLabel.Text = "v6.5"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -2412,7 +2419,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.4"
+local version = "6.5"
 
 local translations = {
 	["fr"] = {
