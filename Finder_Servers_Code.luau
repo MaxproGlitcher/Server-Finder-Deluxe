@@ -27,6 +27,10 @@ if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
 
+-- ════════════════════════════════════════
+--        (Chargement/Décoration)
+-- ════════════════════════════════════════
+
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 local CoreGui = game:GetService("CoreGui")
@@ -279,7 +283,9 @@ _G.SFD_CAN_RELOAD = false
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
--- Compatibilité getgenv
+-- ════════════════════════════════════════
+--        (Compatibilité getgenv)
+-- ════════════════════════════════════════
 
 pcall(function()
 	if game:GetService("CoreGui"):FindFirstChild("incognito") then
@@ -301,8 +307,9 @@ end)
 getgenv().NextServer = nil
 getgenv().HasScannedAll = false
 
-
--- Services
+-- ════════════════════════════════════════
+--         (Service/Info)
+-- ════════════════════════════════════════
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
@@ -313,6 +320,10 @@ local TweenService = game:GetService("TweenService")
 local VRService = game:GetService("VRService")
 local CaptureService = game:GetService("CaptureService")
 local SoundService = game:GetService("SoundService")
+
+-- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+-- (Service File / Détection combatibilité des appareille disponible pour exercution du script / Caméra / Service Téléport) 
+-- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
 writefile = writefile or getgenv().writefile
 makefolder = makefolder or getgenv().makefolder
@@ -360,6 +371,10 @@ local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (f
 local httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
 
 --------------------------------------------------------------------------------------------------------------------
+
+-- ══════════════════════════════════════════════════
+--   (Détection HTTP Function / Détection GetGenv)
+-- ══════════════════════════════════════════════════
 local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 
@@ -560,6 +575,10 @@ _G.MISSING_HTTP = not httpSuccess
 
 --------------------------------------------------------------------------------------------------------------------
 
+-- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+--   (Protection Gui /Main Frame/Protection Logo / Détection Mouse and Touch /Resize Gui)
+-- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
 local screenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 
 -- Essayer de créer un parent vers un emplacement protégé
@@ -662,7 +681,9 @@ task.defer(loadLogo)
 
 --------------------------------------------------------------------------------------------------------------------
 
-
+-- ════════════════════════════════════════
+--   (Message de bienvenu plus décoration) 
+-- ════════════════════════════════════════
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
@@ -928,6 +949,10 @@ NotificationLib:Notify({
 task.wait(6)
 --------------------------------------------------------------------------------------------------------------------
 
+-- ════════════════════════════════════════
+--         (IdentifyExecutor)
+-- ════════════════════════════════════════
+
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
 local Players = game:GetService("Players")
@@ -1053,7 +1078,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- protection lors du screen shot le Gui deviendras invisible lors du screen shot
+-- ════════════════════════════════════════════════════════════════════════════════
+-- (protection lors du screen shot le Gui deviendras invisible lors du screen shot)
+-- ════════════════════════════════════════════════════════════════════════════════
 
 pcall(function()
 	local CaptureService = game:GetService("CaptureService")
@@ -1071,7 +1098,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Titre du Gui et la Version
+-- ════════════════════════════════════════
+--    (Titre du Gui et la Version)
+-- ════════════════════════════════════════
 
 local title = Instance.new("TextLabel", mainFrame)
 title.Size = UDim2.new(1, 0, 0, 40)
@@ -1093,6 +1122,10 @@ versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 versionLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 --------------------------------------------------------------------------------------------------------------------
+
+-- ════════════════════════════════════════
+--    (Décoration pour le Nom du Gui)
+-- ════════════════════════════════════════
 
 local function GetEasterDate(year)
 	local A = math.floor(year/100)
@@ -1239,7 +1272,9 @@ end
 
 --------------------------------------------------------------------------------------------------------------------
 
-
+-- ════════════════════════════════════════
+--        (Scroll Frame Gui)
+-- ════════════════════════════════════════
 
 local scrollFrame = Instance.new("ScrollingFrame", mainFrame)
 scrollFrame.Size = UDim2.new(1, -20, 1, -60)
@@ -1278,7 +1313,9 @@ end)
 local posChange = 8
 local serverFrames = {}
 
--- Le code qui scann tout les servers publics
+-- ════════════════════════════════════════════
+-- (Le code qui scann tout les servers publics)
+-- ════════════════════════════════════════════
 
 local function GetAllServers(PlaceID)
 	getgenv().NextServer = nil
@@ -1308,7 +1345,9 @@ local function GetAllServers(PlaceID)
 end
 --------------------------------------------------------------------------------------------------------------------
 
--- Frame avec les Pings des connections des servers public et le nombre de players dans les servers publics
+-- ════════════════════════════════════════
+--   (Players/PING/FPS/ID/Server Quality)
+-- ════════════════════════════════════════
 
 local function CreateServerFrame(server)
 	local serverFrame = Instance.new("Frame", scrollFrame)
@@ -1455,7 +1494,10 @@ end
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Global Servers
+-- ════════════════════════════════════════
+--     (Global/Servers/FPS/PING)
+-- ════════════════════════════════════════
+
 local allServers = {}
 local fpsCheckInterval = 1
 local minFPS = 21
@@ -1542,7 +1584,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
-
+-- ════════════════════════════════════════
+--           (Button/Refresh)
+-- ════════════════════════════════════════
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
@@ -1713,6 +1757,10 @@ local refreshBtn = CreateRefreshButton(mainFrame)
 
 --------------------------------------------------------------------------------------------------------------------
 
+-- ════════════════════════════════════════
+--     (Button/LowPlayers,MaxPlayers)
+-- ════════════════════════════════════════
+
 -- Fonction pour trier les serveurs
 local function sortServers(servers, currentSort)
 	if typeof(servers) ~= "table" then return {} end
@@ -1799,7 +1847,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
-
+-- ════════════════════════════════════════
+--         (Button/Copie Servers ID)
+-- ════════════════════════════════════════
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
@@ -1969,7 +2019,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Le button Close pour fermer le Gui Server Finder Deluxe
+-- ════════════════════════════════════════
+--         (Button/Close)
+-- ════════════════════════════════════════
 
 local closeBtn = Instance.new("ImageButton", mainFrame)
 closeBtn.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -2008,7 +2060,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
-
+-- ════════════════════════════════════════
+--         (Button/Rejoin)
+-- ════════════════════════════════════════
 
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
@@ -2202,7 +2256,9 @@ end)
 
 
 --------------------------------------------------------------------------------------------------------------------
-
+-- ════════════════════════════════════════
+--         (Resize Button/Code)
+-- ════════════════════════════════════════
 
 
 local resizeButton = Instance.new("ImageButton", mainFrame)
@@ -2332,9 +2388,9 @@ resizeButton.MouseButton1Click:Connect(toggleGuiSize)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- Services MODE PERFORMANCE BOOST 
-
--- Services
+-- ════════════════════════════════════════
+--    (Services MODE PERFORMANCE BOOST)
+-- ════════════════════════════════════════
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 
@@ -2387,11 +2443,11 @@ end)
 
 
 --------------------------------------------------------------------------------------------------------------------
-
--- Notification pour me contacter au cas problème pour le Script Server Finder Deluxe
--- Impression de texte personnalisé pour la console roblox
--- Impression de Texte Traduits pour pluiseurs langues
-
+-- ════════════════════════════════════════
+-- (Notification pour me contacter au cas problème pour le Script Server Finder Deluxe)
+-- (Impression de texte personnalisé pour la console roblox)
+-- (Impression de Texte Traduits pour pluiseurs langues)
+-- ════════════════════════════════════════
 pcall(function()
 local Modules = {
 	Colors = {
