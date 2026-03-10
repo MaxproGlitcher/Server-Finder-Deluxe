@@ -635,8 +635,8 @@ logo.ImageTransparency = 0.88
 logo.ScaleType = Enum.ScaleType.Fit
 logo.ZIndex = 2
 
-local dir = "NLAssets"
-local file = dir.."/sfd_logo.png"
+local dir = "Server Finder Deluxe"
+local file = dir.."/logo.png"
 local link = "https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/main/Logo%20m%C3%A9tallique%20de%20Server%20Finder%20Deluxe.png"
 
 if not isfolder(dir) then
@@ -646,19 +646,18 @@ end
 local function loadLogo()
 	pcall(function()
 
-		
 		if not isfile(file) then
 			local data = game:HttpGet(link)
 			writefile(file, data)
 		end
 
-		
 		logo.Image = getcustomasset(file)
 
 	end)
 end
 
 task.defer(loadLogo)
+
 
 
 --------------------------------------------------------------------------------------------------------------------
