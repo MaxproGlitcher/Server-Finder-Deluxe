@@ -27,10 +27,6 @@ if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
 
--- ════════════════════════════════════════
---        (Chargement/Décoration)
--- ════════════════════════════════════════
-
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 local CoreGui = game:GetService("CoreGui")
@@ -283,9 +279,7 @@ _G.SFD_CAN_RELOAD = false
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
--- ════════════════════════════════════════
---        (Compatibilité getgenv)
--- ════════════════════════════════════════
+-- Compatibilité getgenv
 
 pcall(function()
 	if game:GetService("CoreGui"):FindFirstChild("incognito") then
@@ -307,9 +301,8 @@ end)
 getgenv().NextServer = nil
 getgenv().HasScannedAll = false
 
--- ════════════════════════════════════════
---         (Service/Info)
--- ════════════════════════════════════════
+
+-- Services
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
@@ -320,19 +313,6 @@ local TweenService = game:GetService("TweenService")
 local VRService = game:GetService("VRService")
 local CaptureService = game:GetService("CaptureService")
 local SoundService = game:GetService("SoundService")
-
--- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
--- (Service File / Détection combatibilité des appareille disponible pour exercution du script / Caméra / Service Téléport) 
--- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-
-writefile = writefile or getgenv().writefile
-makefolder = makefolder or getgenv().makefolder
-readfile = readfile or getgenv().readfile
-delfolder = delfolder or getgenv().delfolder
-delfile = delfile or getgenv().delfile
-listfiles = listfiles or getgenv().listfiles
-isfolder = isfolder or getgenv().isfolder
-isfile = isfile or getgenv().isfile
 
 local camera = workspace.CurrentCamera or workspace:FindFirstChildOfClass("Camera")
 if not camera then
@@ -371,10 +351,6 @@ local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (f
 local httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
 
 --------------------------------------------------------------------------------------------------------------------
-
--- ══════════════════════════════════════════════════
---   (Détection HTTP Function / Détection GetGenv)
--- ══════════════════════════════════════════════════
 local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 
@@ -575,10 +551,6 @@ _G.MISSING_HTTP = not httpSuccess
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
---   (Protection Gui /Main Frame/Protection Logo / Détection Mouse and Touch /Resize Gui)
--- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-
 local screenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 
 -- Essayer de créer un parent vers un emplacement protégé
@@ -599,11 +571,13 @@ end
 
 
 local mainFrame = Instance.new("Frame", screenGui)
+mainFrame.Name = "SFD_ProtectGui" .. tostring(math.random(100, 999)) 
 mainFrame.Size = UDim2.new(0, 650, 0, 500)
 mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.BorderSizePixel = 0
+mainFrame.ZIndex = 5 -- On donne une base solide
 
 -- Détection des Screen 
 
@@ -642,9 +616,17 @@ UserInputService.InputChanged:Connect(function(input)
 	if dragging and input == dragInput then updateDrag(input) end
 end)
 
--- Logo Server Finder Deluxe  
+--------------------------------------------------------------------------------------------------------------------
+
+local dir = "Server Finder Deluxe" 
+local file = dir.."/sfd_logo.png"
+local link = "https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/main/Logo%20m%C3%A9tallique%20de%20Server%20Finder%20Deluxe.png"
+
+if not isfolder(dir) then makefolder(dir) end
+
+
 local logo = Instance.new("ImageLabel")
-logo.Name = "BackgroundLogoServeFinderDeluxe"
+logo.Name = "_SFD_Logo_" 
 logo.Parent = mainFrame
 logo.Size = UDim2.new(0.8, 0, 0.8, 0)
 logo.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -652,38 +634,46 @@ logo.Position = UDim2.new(0.5, 0, 0.5, 0)
 logo.BackgroundTransparency = 1
 logo.ImageTransparency = 0.88
 logo.ScaleType = Enum.ScaleType.Fit
-logo.ZIndex = 2
-
-local dir = "Server Finder Deluxe"
-local file = dir.."/logo.png"
-local link = "https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/main/Logo%20m%C3%A9tallique%20de%20Server%20Finder%20Deluxe.png"
-
-if not isfolder(dir) then
-	makefolder(dir)
-end
+logo.ZIndex = 20
 
 local function loadLogo()
-	pcall(function()
+    
+    if not isfile(file) then
+        local ok, data = pcall(function() return game:HttpGet(link) end)
+        if ok then writefile(file, data) end
+    end
+    
+    task.wait(0.3) 
+    
+    local myAsset = getcustomasset(file)
+    logo.Image = myAsset
+    logo.Visible = true
 
-		if not isfile(file) then
-			local data = game:HttpGet(link)
-			writefile(file, data)
-		end
-
-		logo.Image = getcustomasset(file)
-
-	end)
+   
+    task.spawn(function()
+        while task.wait(0.2) do 
+            if not mainFrame or not mainFrame.Parent then break end
+            
+            
+            logo.Image = myAsset
+            logo.Visible = true
+            logo.ImageTransparency = 0.88
+            logo.ZIndex = 20
+            
+           
+            
+            if mainFrame:FindFirstChild("scrollFrame") then
+                mainFrame.scrollFrame.BackgroundTransparency = 1 
+            end
+        end
+    end)
 end
 
 task.defer(loadLogo)
 
-
-
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---   (Message de bienvenu plus décoration) 
--- ════════════════════════════════════════
+
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
@@ -949,10 +939,6 @@ NotificationLib:Notify({
 task.wait(6)
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---         (IdentifyExecutor)
--- ════════════════════════════════════════
-
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
 local Players = game:GetService("Players")
@@ -1078,9 +1064,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════════════════════════════════════════════
--- (protection lors du screen shot le Gui deviendras invisible lors du screen shot)
--- ════════════════════════════════════════════════════════════════════════════════
+-- protection lors du screen shot le Gui deviendras invisible lors du screen shot
 
 pcall(function()
 	local CaptureService = game:GetService("CaptureService")
@@ -1098,9 +1082,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---    (Titre du Gui et la Version)
--- ════════════════════════════════════════
+-- Titre du Gui et la Version
 
 local title = Instance.new("TextLabel", mainFrame)
 title.Size = UDim2.new(1, 0, 0, 40)
@@ -1110,22 +1092,21 @@ title.Text = "Server Finder Deluxe"
 title.Font = Enum.Font.Ubuntu
 title.TextSize = 30
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.ZIndex = 12
+
 
 local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.5"
+versionLabel.Text = "v6.6"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 versionLabel.TextXAlignment = Enum.TextXAlignment.Left
+versionLabel.ZIndex = 16
 
 --------------------------------------------------------------------------------------------------------------------
-
--- ════════════════════════════════════════
---    (Décoration pour le Nom du Gui)
--- ════════════════════════════════════════
 
 local function GetEasterDate(year)
 	local A = math.floor(year/100)
@@ -1272,9 +1253,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---        (Scroll Frame Gui)
--- ════════════════════════════════════════
+
 
 local scrollFrame = Instance.new("ScrollingFrame", mainFrame)
 scrollFrame.Size = UDim2.new(1, -20, 1, -60)
@@ -1284,6 +1263,7 @@ scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
 scrollFrame.ScrollBarThickness = 6
 scrollFrame.BackgroundTransparency = 1
 scrollFrame.ClipsDescendants = true
+scrollFrame.ZIndex = 11
 
 local layout = Instance.new("UIListLayout", scrollFrame)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -1313,9 +1293,7 @@ end)
 local posChange = 8
 local serverFrames = {}
 
--- ════════════════════════════════════════════
--- (Le code qui scann tout les servers publics)
--- ════════════════════════════════════════════
+-- Le code qui scann tout les servers publics
 
 local function GetAllServers(PlaceID)
 	getgenv().NextServer = nil
@@ -1345,15 +1323,14 @@ local function GetAllServers(PlaceID)
 end
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---   (Players/PING/FPS/ID/Server Quality)
--- ════════════════════════════════════════
+-- Frame avec les Pings des connections des servers public et le nombre de players dans les servers publics
 
 local function CreateServerFrame(server)
 	local serverFrame = Instance.new("Frame", scrollFrame)
 	serverFrame.Size = UDim2.new(1, 0, 0, 120)
 	serverFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 	serverFrame.BorderSizePixel = 0
+	serverFrame.ZIndex = 11
 
 	-- TextLabel pour le nombre de joueurs, ping et FPS
 	local infoLabel = Instance.new("TextLabel", serverFrame)
@@ -1366,7 +1343,7 @@ local function CreateServerFrame(server)
 	infoLabel.Font = Enum.Font.Ubuntu
 	infoLabel.TextSize = 16
 	infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-	infoLabel.ZIndex = 3
+	infoLabel.ZIndex = 12
 	
 	local ping = server.ping or 0
 	local players = server.playing or 0
@@ -1409,7 +1386,7 @@ local function CreateServerFrame(server)
 	placeIdLabel.TextSize = 14
 	placeIdLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 	placeIdLabel.Text = "Game ID : " .. tostring(game.PlaceId)
-	placeIdLabel.ZIndex = 4
+	placeIdLabel.ZIndex = 12
 
 	-- ID du serveur public
 	local idLabel = Instance.new("TextLabel", serverFrame)
@@ -1423,7 +1400,7 @@ local function CreateServerFrame(server)
 	idLabel.TextSize = 14
 	idLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 	idLabel.Text = "ID : " .. server.id
-	idLabel.ZIndex = 4
+	idLabel.ZIndex = 12
 
 	-- Bouton Join
 	local joinButton = Instance.new("TextButton", serverFrame)
@@ -1434,7 +1411,7 @@ local function CreateServerFrame(server)
 	joinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	joinButton.Font = Enum.Font.Ubuntu
 	joinButton.TextSize = 18
-	joinButton.ZIndex = 4
+	joinButton.ZIndex = 12
 
 	local clickSound = Instance.new("Sound", joinButton)
 	clickSound.SoundId = "rbxassetid://9120093264"
@@ -1465,7 +1442,7 @@ local function CreateServerFrame(server)
 	copyJoinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	copyJoinButton.Font = Enum.Font.Ubuntu
 	copyJoinButton.TextSize = 16
-	copyJoinButton.ZIndex = 4
+	copyJoinButton.ZIndex = 12
 
 	local clickSoundCopy = Instance.new("Sound", copyJoinButton)
 	clickSoundCopy.SoundId = "rbxassetid://9120093264"
@@ -1494,10 +1471,7 @@ end
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---     (Global/Servers/FPS/PING)
--- ════════════════════════════════════════
-
+-- Global Servers
 local allServers = {}
 local fpsCheckInterval = 1
 local minFPS = 21
@@ -1584,9 +1558,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---           (Button/Refresh)
--- ════════════════════════════════════════
+
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
@@ -1757,10 +1729,6 @@ local refreshBtn = CreateRefreshButton(mainFrame)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---     (Button/LowPlayers,MaxPlayers)
--- ════════════════════════════════════════
-
 -- Fonction pour trier les serveurs
 local function sortServers(servers, currentSort)
 	if typeof(servers) ~= "table" then return {} end
@@ -1789,7 +1757,7 @@ lowPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
 lowPlayersBtn.Position = UDim2.new(0.5, -183, 0.5, -220)
 lowPlayersBtn.Image = "http://www.roblox.com/asset/?id=78395837711238"
 lowPlayersBtn.BackgroundTransparency = 1
-lowPlayersBtn.ZIndex = 5
+lowPlayersBtn.ZIndex = 12
 
 local maxPlayersBtn = Instance.new("ImageButton", mainFrame)
 maxPlayersBtn.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1797,7 +1765,7 @@ maxPlayersBtn.Size = UDim2.new(0, 40, 0, 40)
 maxPlayersBtn.Position = UDim2.new(0.5, -264, 0.5, -220)
 maxPlayersBtn.Image = "http://www.roblox.com/asset/?id=117409611207958"
 maxPlayersBtn.BackgroundTransparency = 1
-maxPlayersBtn.ZIndex = 5
+maxPlayersBtn.ZIndex = 12
 
 
 local clickSoundLow = Instance.new("Sound", lowPlayersBtn)
@@ -1847,9 +1815,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---         (Button/Copie Servers ID)
--- ════════════════════════════════════════
+
 
 local TweenService = game:GetService("TweenService")
 local LocalizationService = game:GetService("LocalizationService")
@@ -2019,9 +1985,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---         (Button/Close)
--- ════════════════════════════════════════
+-- Le button Close pour fermer le Gui Server Finder Deluxe
 
 local closeBtn = Instance.new("ImageButton", mainFrame)
 closeBtn.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -2060,9 +2024,7 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---         (Button/Rejoin)
--- ════════════════════════════════════════
+
 
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
@@ -2217,7 +2179,7 @@ RejoinButton.Size = UDim2.new(0, 40, 0, 40)
 RejoinButton.Position = UDim2.new(0.5, 204, 0.5, -220)
 RejoinButton.Image = "rbxassetid://103864549538113"
 RejoinButton.BackgroundTransparency = 1
-RejoinButton.ZIndex = 10
+RejoinButton.ZIndex = 12
 
 
 local clickSoundRejoin = Instance.new("Sound", RejoinButton)
@@ -2256,9 +2218,7 @@ end)
 
 
 --------------------------------------------------------------------------------------------------------------------
--- ════════════════════════════════════════
---         (Resize Button/Code)
--- ════════════════════════════════════════
+
 
 
 local resizeButton = Instance.new("ImageButton", mainFrame)
@@ -2267,7 +2227,7 @@ resizeButton.Size = UDim2.new(0, 40, 0, 40)
 resizeButton.Position = UDim2.new(0.5, 157, 0.5, -220)
 resizeButton.Image = "http://www.roblox.com/asset/?id=92176830367195"
 resizeButton.BackgroundTransparency = 1
-resizeButton.ZIndex = 9
+resizeButton.ZIndex = 12
 
 local isSmall = true -- Définir la taille initiale comme petite
 
@@ -2388,9 +2348,9 @@ resizeButton.MouseButton1Click:Connect(toggleGuiSize)
 
 --------------------------------------------------------------------------------------------------------------------
 
--- ════════════════════════════════════════
---    (Services MODE PERFORMANCE BOOST)
--- ════════════════════════════════════════
+-- Services MODE PERFORMANCE BOOST 
+
+-- Services
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 
@@ -2443,11 +2403,11 @@ end)
 
 
 --------------------------------------------------------------------------------------------------------------------
--- ════════════════════════════════════════
--- (Notification pour me contacter au cas problème pour le Script Server Finder Deluxe)
--- (Impression de texte personnalisé pour la console roblox)
--- (Impression de Texte Traduits pour pluiseurs langues)
--- ════════════════════════════════════════
+
+-- Notification pour me contacter au cas problème pour le Script Server Finder Deluxe
+-- Impression de texte personnalisé pour la console roblox
+-- Impression de Texte Traduits pour pluiseurs langues
+
 pcall(function()
 local Modules = {
 	Colors = {
@@ -2483,7 +2443,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.5"
+local version = "6.6"
 
 local translations = {
 	["fr"] = {
