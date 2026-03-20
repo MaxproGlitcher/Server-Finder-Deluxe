@@ -650,12 +650,13 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
+local TweenService = game:GetService("TweenService")
+
 local dir = "Server Finder Deluxe" 
 local file = dir.."/sfd_logo.png"
 local link = "https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/main/Logo%20m%C3%A9tallique%20de%20Server%20Finder%20Deluxe.png"
 
 if not isfolder(dir) then makefolder(dir) end
-
 
 local logo = Instance.new("ImageLabel")
 logo.Name = "_SFD_Logo_" 
@@ -667,6 +668,27 @@ logo.BackgroundTransparency = 1
 logo.ImageTransparency = 0.88
 logo.ScaleType = Enum.ScaleType.Fit
 logo.ZIndex = 20
+
+local function isAprilFools()
+    local d = os.date("*t")
+    return d.day == 1 and d.month == 4
+end
+
+local function spinLogo()
+    local rotation = 0
+    while logo and logo.Parent do
+        rotation += 360
+        
+        local tween = TweenService:Create(
+            logo,
+            TweenInfo.new(2, Enum.EasingStyle.Linear),
+            {Rotation = rotation}
+        )
+        
+        tween:Play()
+        tween.Completed:Wait()
+    end
+end
 
 local function loadLogo()
     
@@ -681,18 +703,19 @@ local function loadLogo()
     logo.Image = myAsset
     logo.Visible = true
 
-   
+    -- 🎉 Effet 1er avril
+    if isAprilFools() then
+        task.spawn(spinLogo)
+    end
+
     task.spawn(function()
         while task.wait(0.2) do 
             if not mainFrame or not mainFrame.Parent then break end
-            
             
             logo.Image = myAsset
             logo.Visible = true
             logo.ImageTransparency = 0.88
             logo.ZIndex = 20
-            
-           
             
             if mainFrame:FindFirstChild("scrollFrame") then
                 mainFrame.scrollFrame.BackgroundTransparency = 1 
@@ -702,6 +725,7 @@ local function loadLogo()
 end
 
 task.defer(loadLogo)
+
 
 --------------------------------------------------------------------------------------------------------------------
 
