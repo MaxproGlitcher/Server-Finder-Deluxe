@@ -1165,7 +1165,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.6"
+versionLabel.Text = "v6.7"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1586,45 +1586,56 @@ local function hasHighPing(servers)
 end
 
 function updateServerList(servers)
-	-- sécurité
-	if typeof(servers) ~= "table" then return end
+	local ok, err = pcall(function()
+		-- sécurité
+		if typeof(servers) ~= "table" then return end
 
-	for _, v in pairs(serverFrames) do
-		v:Destroy()
-	end
-	posChange = 8
-	table.clear(serverFrames)
+		for _, v in pairs(serverFrames) do
+			v:Destroy()
+		end
+		posChange = 8
+		table.clear(serverFrames)
 
-	-- si FPS bas OU pings trop élevés
-	if smoothMode or hasHighPing(servers) then
-		task.spawn(function()
+		-- si FPS bas OU pings trop élevés
+		if smoothMode or hasHighPing(servers) then
+			task.spawn(function()
+				for _, server in ipairs(servers) do
+					CreateServerFrame(server)
+					posChange += 154
+					task.wait(0.05)
+				end
+			end)
+		else
 			for _, server in ipairs(servers) do
 				CreateServerFrame(server)
 				posChange += 154
-				task.wait(0.05)
 			end
-		end)
-	else
-		for _, server in ipairs(servers) do
-			CreateServerFrame(server)
-			posChange += 154
 		end
+	end)
+
+	if not ok then
+		warn("Error in updateServerList.", err)
 	end
 end
 
-function refreshServers()
-	local servers = GetAllServers(game.PlaceId)
 
-	-- sécurité : vérifie que servers est bien une table et contient quelque chose
+function refreshServers()
+	local ok, servers = pcall(GetAllServers, game.PlaceId)
+
 	if typeof(servers) == "table" and #servers > 0 then
-		allServers = servers[1] or {}
+		local allServersFlat = {}
+		for _, batch in ipairs(servers) do
+			for _, s in ipairs(batch) do
+				table.insert(allServersFlat, s)
+			end
+		end
+		allServers = allServersFlat
 		updateServerList(allServers)
 	else
 		warn("No server found or API error.")
 		showErrorTween()
 	end
 end
-
 
 
 refreshServers()
@@ -2542,7 +2553,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.6"
+local version = "6.7"
 
 local translations = {
 	["fr"] = {
