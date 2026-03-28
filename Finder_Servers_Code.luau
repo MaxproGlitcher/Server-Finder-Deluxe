@@ -1400,25 +1400,36 @@ end
 --------------------------------------------------------------------------------------------------------------------
 
 -- ════════════════════════════════════════
---   (Players/PING/FPS/ID/Server Quality)
+--   (Players/PING/FPS/ID/Server Quality/Heure)
 -- ════════════════════════════════════════
 
+ 
 local function formatTime()
-	local dt = DateTime.now():ToLocalTime()
-	local hour = dt.Hour
-	local ampm = "AM"
+	local success, result = pcall(function()
+		local dt = DateTime.now():ToLocalTime()
+		local hour = dt.Hour
+		local ampm = "AM"
 
-	if hour >= 12 then
-		ampm = "PM"
+		if hour >= 12 then
+			ampm = "PM"
+		end
+
+		hour = hour % 12
+		if hour == 0 then
+			hour = 12
+		end
+
+		return string.format("%02d:%02d %s", hour, dt.Minute, ampm)
+	end)
+
+	if success then
+		return result
+	else
+		warn("formatTime failed: unable to get the local time.")
+		return "N/A"
 	end
-
-	hour = hour % 12
-	if hour == 0 then
-		hour = 12
-	end
-
-	return string.format("%02d:%02d %s", hour, dt.Minute, ampm)
 end
+
 
 
 local function CreateServerFrame(server)
@@ -1532,37 +1543,21 @@ local function CreateServerFrame(server)
 		end
 	end)
 
-    server.timeObtained = server.timeObtained or formatTime()
+       server.timeObtained = server.timeObtained or formatTime()
     
-	-- Heure des Servers Roblox 
-	local timeLabel = Instance.new("TextLabel", serverFrame)
-    timeLabel.Size = UDim2.new(0, 100, 0, 20)
-    timeLabel.Position = UDim2.new(1, -110, 0.5, -50) -- 👈 au-dessus du Join
-    timeLabel.BackgroundTransparency = 1
-    timeLabel.TextXAlignment = Enum.TextXAlignment.Center
-    timeLabel.Font = Enum.Font.Ubuntu
-    timeLabel.TextSize = 14
-    timeLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
-    timeLabel.ZIndex = 12
+        -- Heure des Servers Roblox 
+        local timeLabel = Instance.new("TextLabel", serverFrame)
+        timeLabel.Size = UDim2.new(0, 100, 0, 20)
+        timeLabel.Position = UDim2.new(1, -110, 0.5, -50) -- 👈 au-dessus du Join
+        timeLabel.BackgroundTransparency = 1
+        timeLabel.TextXAlignment = Enum.TextXAlignment.Center
+        timeLabel.Font = Enum.Font.Ubuntu
+        timeLabel.TextSize = 14
+        timeLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+        timeLabel.ZIndex = 12
 	timeLabel.Text = server.timeObtained
 
-	local function formatTime()
-	local dt = DateTime.now():ToLocalTime()
-	local hour = dt.Hour
-	local ampm = "AM"
-
-	if hour >= 12 then
-		ampm = "PM"
-	end
-
-	hour = hour % 12
-	if hour == 0 then
-		hour = 12
-	end
-
-	return string.format("%02d:%02d %s", hour, dt.Minute, ampm)
-end
-
+        -- Copie JoinButton
 	local copyJoinButton = Instance.new("TextButton", serverFrame)
 	copyJoinButton.Size = UDim2.new(0, 100, 0, 30)
 	copyJoinButton.Position = UDim2.new(1, -110, 0.5, 25)
