@@ -1165,7 +1165,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.7"
+versionLabel.Text = "v6.8"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1403,12 +1403,32 @@ end
 --   (Players/PING/FPS/ID/Server Quality)
 -- ════════════════════════════════════════
 
+local function formatTime()
+	local dt = DateTime.now():ToLocalTime()
+	local hour = dt.Hour
+	local ampm = "AM"
+
+	if hour >= 12 then
+		ampm = "PM"
+	end
+
+	hour = hour % 12
+	if hour == 0 then
+		hour = 12
+	end
+
+	return string.format("%02d:%02d %s", hour, dt.Minute, ampm)
+end
+
+
 local function CreateServerFrame(server)
 	local serverFrame = Instance.new("Frame", scrollFrame)
 	serverFrame.Size = UDim2.new(1, 0, 0, 120)
 	serverFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 	serverFrame.BorderSizePixel = 0
 	serverFrame.ZIndex = 11
+
+	server.timeObtained = server.timeObtained or formatTime()
 
 	-- TextLabel pour le nombre de joueurs, ping et FPS
 	local infoLabel = Instance.new("TextLabel", serverFrame)
@@ -1511,6 +1531,37 @@ local function CreateServerFrame(server)
 			warn("An error occurred on the join button. Please try again.", err)
 		end
 	end)
+
+    server.timeObtained = server.timeObtained or formatTime()
+    
+	-- Heure des Servers Roblox 
+	local timeLabel = Instance.new("TextLabel", serverFrame)
+    timeLabel.Size = UDim2.new(0, 100, 0, 20)
+    timeLabel.Position = UDim2.new(1, -110, 0.5, -50) -- 👈 au-dessus du Join
+    timeLabel.BackgroundTransparency = 1
+    timeLabel.TextXAlignment = Enum.TextXAlignment.Center
+    timeLabel.Font = Enum.Font.Ubuntu
+    timeLabel.TextSize = 14
+    timeLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+    timeLabel.ZIndex = 12
+	timeLabel.Text = server.timeObtained
+
+	local function formatTime()
+	local dt = DateTime.now():ToLocalTime()
+	local hour = dt.Hour
+	local ampm = "AM"
+
+	if hour >= 12 then
+		ampm = "PM"
+	end
+
+	hour = hour % 12
+	if hour == 0 then
+		hour = 12
+	end
+
+	return string.format("%02d:%02d %s", hour, dt.Minute, ampm)
+end
 
 	local copyJoinButton = Instance.new("TextButton", serverFrame)
 	copyJoinButton.Size = UDim2.new(0, 100, 0, 30)
@@ -2553,7 +2604,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.7"
+local version = "6.8"
 
 local translations = {
 	["fr"] = {
