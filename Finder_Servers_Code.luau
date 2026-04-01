@@ -652,14 +652,17 @@ end)
 
 local TweenService = game:GetService("TweenService")
 
-local dir = "Server Finder Deluxe" 
+local dir = "Server Finder Deluxe"
 local file = dir.."/sfd_logo.png"
 local link = "https://raw.githubusercontent.com/MaxproGlitcher/Server-Finder-Deluxe/main/Logo%20m%C3%A9tallique%20de%20Server%20Finder%20Deluxe.png"
 
-if not isfolder(dir) then makefolder(dir) end
+if not isfolder(dir) then
+	makefolder(dir)
+end
 
 local logo = Instance.new("ImageLabel")
-logo.Name = "_SFD_Logo_" 
+logo.Name = "_SFD_Logo_"
+
 logo.Parent = mainFrame
 logo.Size = UDim2.new(0.8, 0, 0.8, 0)
 logo.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -669,62 +672,125 @@ logo.ImageTransparency = 0.88
 logo.ScaleType = Enum.ScaleType.Fit
 logo.ZIndex = 20
 
+
+local TweenService = game:GetService("TweenService")
+
 local function isAprilFools()
-    local d = os.date("*t")
-    return d.day == 1 and d.month == 4
+	local d = os.date("*t")
+	return d.day == 1 and d.month == 4
 end
+
 
 local function spinLogo()
-    local rotation = 0
-    while logo and logo.Parent do
-        rotation += 360
-        
-        local tween = TweenService:Create(
-            logo,
-            TweenInfo.new(2, Enum.EasingStyle.Linear),
-            {Rotation = rotation}
-        )
-        
-        tween:Play()
-        tween.Completed:Wait()
-    end
+	while logo and logo.Parent do
+		local tween = TweenService:Create(
+			logo,
+			TweenInfo.new(2, Enum.EasingStyle.Linear),
+			{Rotation = logo.Rotation + 360}
+		)
+		tween:Play()
+		tween.Completed:Wait()
+	end
 end
 
+
+local function isValidAsset(asset)
+	if not asset or asset == "" then
+		return false
+	end
+	return string.find(asset, "rbxasset") ~= nil
+end
+
+
+local function downloadLogo()
+	local ok, data = pcall(function()
+		return game:HttpGet(link)
+	end)
+
+	if ok and data then
+		if not isfolder(dir) then
+			makefolder(dir)
+		end
+		writefile(file, data)
+	end
+end
+
+
+local function getLogoAsset()
+	if not isfile(file) then
+		downloadLogo()
+		task.wait(0.3)
+	end
+
+	local success, asset = pcall(function()
+		return getcustomasset(file)
+	end)
+
+	if not success or not isValidAsset(asset) then
+		warn("Logo invalide → re-download")
+
+		if isfolder(dir) then
+			delfolder(dir)
+			task.wait()
+		end
+		makefolder(dir)
+
+		downloadLogo()
+		task.wait(0.3)
+
+		local retry, newAsset = pcall(function()
+			return getcustomasset(file)
+		end)
+
+		if retry and isValidAsset(newAsset) then
+			return newAsset
+		end
+
+		return nil
+	end
+
+	return asset
+end
+
+
 local function loadLogo()
-    
-    if not isfile(file) then
-        local ok, data = pcall(function() return game:HttpGet(link) end)
-        if ok then writefile(file, data) end
-    end
-    
-    task.wait(0.3) 
-    
-    local myAsset = getcustomasset(file)
-    logo.Image = myAsset
-    logo.Visible = true
+	local myAsset = getLogoAsset()
+	if not myAsset then return end
 
-    -- 🎉 Effet 1er avril
-    if isAprilFools() then
-        task.spawn(spinLogo)
-    end
+	logo.Image = myAsset
+	logo.Visible = true
 
-    task.spawn(function()
-        while task.wait(0.2) do 
-            if not mainFrame or not mainFrame.Parent then break end
-            
-            logo.Image = myAsset
-            logo.Visible = true
-            logo.ImageTransparency = 0.88
-            logo.ZIndex = 20
-            
-            if mainFrame:FindFirstChild("scrollFrame") then
-                mainFrame.scrollFrame.BackgroundTransparency = 1 
-            end
-        end
-    end)
+	
+	if isAprilFools() then
+		task.spawn(spinLogo)
+	end
+
+	
+	task.spawn(function()
+		while task.wait(0.5) do
+			if not mainFrame or not mainFrame.Parent then break end
+
+			if not logo.Image or logo.Image == "" then
+				local newAsset = getLogoAsset()
+				if newAsset then
+					logo.Image = newAsset
+				end
+			end
+
+			logo.Visible = true
+			logo.ZIndex = 20
+
+			if not isAprilFools() then
+				logo.ImageTransparency = 0.88
+				logo.Position = UDim2.new(0.5, 0, 0.5, 0)
+				logo.Rotation = 0
+			end
+		end
+	end)
 end
 
 task.defer(loadLogo)
+
 
 
 --------------------------------------------------------------------------------------------------------------------
