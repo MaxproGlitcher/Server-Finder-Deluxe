@@ -611,6 +611,9 @@ mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.BorderSizePixel = 0
 mainFrame.ZIndex = 5 -- On donne une base solide
 
+local corner = Instance.new("UICorner")
+corner.Parent = mainFrame
+
 -- Détection des Screen 
 
 if isOnMobile or SCREEN_SIZE.X < 800 then
