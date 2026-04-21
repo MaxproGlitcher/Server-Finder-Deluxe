@@ -325,7 +325,7 @@ local SoundService = game:GetService("SoundService")
 local clipBoard = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
 
 -- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
--- (Service File / Détection combatibilité des appareille disponible pour exercution du script / Caméra / Service Téléport) 
+-- (Service File / Détection combatibilité des appareilles disponible pour exercution du script / Caméra / Service Téléport) 
 -- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
 writefile = writefile or getgenv().writefile
@@ -654,6 +654,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
+-- ════════════════════════════════════════
+-- (Logo Server Finder Deluxe / plus Events April Day) 
+-- ════════════════════════════════════════
 local TweenService = game:GetService("TweenService")
 
 local dir = "Server Finder Deluxe"
