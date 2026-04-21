@@ -322,6 +322,7 @@ local TweenService = game:GetService("TweenService")
 local VRService = game:GetService("VRService")
 local CaptureService = game:GetService("CaptureService")
 local SoundService = game:GetService("SoundService")
+local clipBoard = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
 
 -- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 -- (Service File / Détection combatibilité des appareille disponible pour exercution du script / Caméra / Service Téléport) 
