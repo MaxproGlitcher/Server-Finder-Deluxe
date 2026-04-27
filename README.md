@@ -4,16 +4,6 @@
   <img src="https://visitor-badge.laobi.icu/badge?page_id=MaxproGlitcher.MaxproGlitcher&"  />
 </div>
 
-![Contributors](https://img.shields.io/github/contributors/MaxproGlitcher/Server-Finder-Deluxe)
-![Issues](https://img.shields.io/github/issues/MaxproGlitcher/Server-Finder-Deluxe)
-![Pull Requests](https://img.shields.io/github/issues-pr/MaxproGlitcher/Server-Finder-Deluxe)
-![Stars](https://img.shields.io/github/stars/MaxproGlitcher/Server-Finder-Deluxe)
-![Forks](https://img.shields.io/github/forks/MaxproGlitcher/Server-Finder-Deluxe)
-![Last Commit](https://img.shields.io/github/last-commit/MaxproGlitcher/Server-Finder-Deluxe)
-![Repo Size](https://img.shields.io/github/repo-size/MaxproGlitcher/Server-Finder-Deluxe)
-
-
-
 ![image alt](https://github.com/MaxproGlitcher/Server-Finder-Deluxe/blob/5d12147161402e929ef64b82e1c0c6bb2a03b61d/Server%20Finder%20logo.jpg)
 
 # Script Finder-Server Deluxe 💻📱
