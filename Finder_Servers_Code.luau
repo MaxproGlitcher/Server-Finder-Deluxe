@@ -107,6 +107,33 @@ bar.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
 bar.BorderSizePixel = 0
 Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 4)
 
+local CopyGithubSFD = Instance.new("TextButton")
+CopyGithubSFD.Parent = barBack
+CopyGithubSFD.Size = UDim2.new(0, 120, 0, 25)
+CopyGithubSFD.Position = UDim2.new(0.5, -60, -3, -30) -- au dessus de la barre
+CopyGithubSFD.BackgroundColor3 = barBack.BackgroundColor3
+CopyGithubSFD.BorderSizePixel = 0
+CopyGithubSFD.Text = "Copy GitHub"
+CopyGithubSFD.Font = Enum.Font.GothamBold
+CopyGithubSFD.TextSize = 14
+CopyGithubSFD.TextColor3 = Color3.fromRGB(220, 220, 220)
+
+Instance.new("UICorner", CopyGithubSFD).CornerRadius = UDim.new(0, 6)
+
+local githubLink = "https://github.com/MaxproGlitcher/Server-Finder-Deluxe"
+
+CopyGithubSFD.MouseButton1Click:Connect(function()
+	pcall(function()
+		if setclipboard then
+			setclipboard(githubLink)
+		elseif toclipboard then
+			toclipboard(githubLink)
+		else
+			warn("Your Exploit don't supported this function check!!!")
+		end
+	end)
+end)
+
 local credit = Instance.new("TextLabel")
 credit.Parent = main
 credit.BackgroundTransparency = 1
@@ -173,22 +200,36 @@ end
 
 local function cycle(colors)
 	local i = 1
+
 	task.spawn(function()
-		while gui.Parent do
-			local c = colors[i]
-			title.TextColor3 = c
-			versionLabel.TextColor3 = c
-			status.TextColor3 = c
-			credit.TextColor3 = c
-			percent.TextColor3 = c
-			bar.BackgroundColor3 = c
-			
-			if discord then
-				discord.TextColor3 = c
+		while gui and gui.Parent do
+			local success, err = pcall(function()
+				local c = colors[i]
+
+				title.TextColor3 = c
+				versionLabel.TextColor3 = c
+				status.TextColor3 = c
+				credit.TextColor3 = c
+				percent.TextColor3 = c
+				bar.BackgroundColor3 = c
+
+				if CopyGithubSFD then
+					CopyGithubSFD.TextColor3 = c
+					CopyGithubSFD.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+				end
+
+				if discord then
+					discord.TextColor3 = c
+				end
+
+				i = i % #colors + 1
+			end)
+
+			if not success then
+				warn("Cycle color error:", err)
 			end
-			
-			i = i % #colors + 1
-			task.wait(0.5)
+
+			task.wait(0.5) 
 		end
 	end)
 end
@@ -1238,7 +1279,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v6.8"
+versionLabel.Text = "v6.9"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -2672,7 +2713,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "6.8"
+local version = "6.9"
 
 local translations = {
 	["fr"] = {
