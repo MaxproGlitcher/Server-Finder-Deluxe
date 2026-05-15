@@ -1241,7 +1241,9 @@ end)
 
 --------------------------------------------------------------------------------------------------------------------
 
-
+-- ════════════════════════════════════════
+--         (Tracker Game)
+-- ════════════════════════════════════════
 
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
@@ -1266,7 +1268,9 @@ local langText = {
 
 local function getLang()
 	local code = LocalizationService.RobloxLocaleId
-	if not code then return "en" end
+	if type(code) ~= "string" then
+		return "en"
+	end
 	return string.lower(code):sub(1,2)
 end
 
@@ -1390,16 +1394,21 @@ local function getGameName()
 end
 
 task.defer(function()
+	local success, err = pcall(function()
+		local prefix = getTranslatedPrefix()
+		local gameName = getGameName()
 
-local prefix = getTranslatedPrefix()
-local gameName = getGameName()
+		NotificationLib:Notify({
+			Title = "System",
+			Message = prefix .. gameName,
+			Duration = 5
+		})
+	end)
 
-NotificationLib:Notify({
-	Title = "System",
-	Message = prefix .. gameName,
-	Duration = 5
-})
-
+	if not success then
+		warn("Tracker error:", err)
+	end
+end)
 --------------------------------------------------------------------------------------------------------------------
 
 -- ════════════════════════════════════════════════════════════════════════════════
