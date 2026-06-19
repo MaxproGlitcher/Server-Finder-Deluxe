@@ -34,6 +34,7 @@ end
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 local CoreGui = game:GetService("CoreGui")
+local LocalizationService = game:GetService("LocalizationService") 
 
 local gui = Instance.new("ScreenGui", game.CoreGui)
 gui.Parent = CoreGui
@@ -44,10 +45,11 @@ local blur = Instance.new("BlurEffect")
 blur.Parent = Lighting
 blur.Size = 12
 
+
 local main = Instance.new("Frame")
 main.Parent = gui
-main.Size = UDim2.new(0, 420, 0, 260)
-main.Position = UDim2.new(0.5, -210, 0.5, -130)
+main.Size = UDim2.new(0, 420, 0, 410) 
+main.Position = UDim2.new(0.5, -210, 0.5, -205)
 main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 main.BorderSizePixel = 0
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
@@ -110,37 +112,79 @@ Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 4)
 local CopyGithubSFD = Instance.new("TextButton")
 CopyGithubSFD.Parent = barBack
 CopyGithubSFD.Size = UDim2.new(0, 120, 0, 25)
-CopyGithubSFD.Position = UDim2.new(0.5, -60, -3, -30) -- au dessus de la barre
+CopyGithubSFD.Position = UDim2.new(0.5, -60, -3, -30)
 CopyGithubSFD.BackgroundColor3 = barBack.BackgroundColor3
 CopyGithubSFD.BorderSizePixel = 0
 CopyGithubSFD.Text = "Copy GitHub"
 CopyGithubSFD.Font = Enum.Font.GothamBold
 CopyGithubSFD.TextSize = 14
 CopyGithubSFD.TextColor3 = Color3.fromRGB(220, 220, 220)
-
 Instance.new("UICorner", CopyGithubSFD).CornerRadius = UDim.new(0, 6)
 
 local githubLink = "https://github.com/MaxproGlitcher/Server-Finder-Deluxe"
 
 CopyGithubSFD.MouseButton1Click:Connect(function()
-	pcall(function()
-		if setclipboard then
-			setclipboard(githubLink)
-		elseif toclipboard then
-			toclipboard(githubLink)
-		else
-			warn("Your Exploit don't supported this function check!!!")
-		end
-	end)
+    pcall(function()
+        if setclipboard then
+            setclipboard(githubLink)
+        elseif toclipboard then
+            toclipboard(githubLink)
+        else
+            warn("Your Exploit don't supported this function check!!!")
+        end
+    end)
 end)
+
+---------------------------------------------------------------------------
+-- 🌟 SECTION NOUVELLE : SYSTÈME DE TRADUCTION & TEXTE DE SÉCURITÉ
+---------------------------------------------------------------------------
+local infoLabel = Instance.new("TextLabel")
+infoLabel.Parent = main
+infoLabel.BackgroundTransparency = 1
+infoLabel.Size = UDim2.new(0, 360, 0, 160)
+infoLabel.Position = UDim2.new(0.5, -180, 0, 190) 
+infoLabel.Font = Enum.Font.GothamMedium
+infoLabel.TextSize = 12
+infoLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+infoLabel.TextXAlignment = Enum.TextXAlignment.Center
+infoLabel.TextYAlignment = Enum.TextYAlignment.Top
+infoLabel.TextWrapped = true
+
+
+local translations = {
+    ["fr"] = "Server Finder Deluxe ne prend aucune information sur votre compte (pas de trackers d'activité ou de dépenses Robux, etc.) et ne contient aucun script malveillant. Ce projet est open source pour vous prouver qu'il est sûr à utiliser.\n\nServer Finder Deluxe se réserve le droit de DMCA si vous utilisez notre nom pour vendre ou diffuser une version malveillante sur le marché des scripts.\n\nSinon, bonne utilisation Guys ! Merci d'utiliser Server Finder Deluxe !!!",
+    ["en"] = "Server Finder Deluxe takes zero information from your account (no trackers on what you play, what you pay with your robux, etc.) and contains no malicious scripts. This project is open source to prove it is safe to use.\n\nServer Finder Deluxe reserves the right to DMCA if you use the name Server Finder Deluxe to sell or distribute a malicious version on the script market.\n\nOtherwise, happy tracking guys! Thanks for using Server Finder Deluxe !!!",
+    ["es"] = "Server Finder Deluxe no toma ninguna información de su cuenta (sin rastreadores de lo que juega o gasta con sus robux, etc.) y no contiene scripts maliciosos. Este proyecto es de código abierto para demostrar que es seguro.\n\nServer Finder Deluxe se reserva el derecho de DMCA si usa el nombre Server Finder Deluxe para vender o distribuir una versión maliciosa en el mercado de scripts.\n\n¡Disfrútenlo chicos! ¡Gracias por usar Server Finder Deluxe!",
+    ["pt"] = "O Server Finder Deluxe não coleta nenhuma informação da sua conta (sem rastreadores do que você joga ou gasta com seus robux, etc.) e não contém scripts maliciosos. Este projeto é de código aberto para provar que é seguro.\n\nServer Finder Deluxe reserva-se o direito de DMCA se você usar o nome Server Finder Deluxe para vender ou distribuir uma versão maliciosa no mercado de scripts.\n\nAproveitem, pessoal! Obrigado por usar o Server Finder Deluxe!",
+    ["tr"] = "Server Finder Deluxe hesabınızdan hiçbir bilgi almaz (ne oynadığınız, robux ile ne ödediğiniz vb. takip edilmez) ve kötü amaçlı yazılım içermez. Bu proje, güvenli olduğunu kanıtlamak için açık kaynaktır.\n\nServer Finder Deluxe ismini script piyasasında kötü amaçlı bir sürüm satmak veya dağıtmak için kullanırsanız, Server Finder Deluxe DMCA hakkını saklı tutar.\n\nBunun dışında, iyi kullanımlar millet! Server Finder Deluxe kullandığınız için teşekkürler !!!",
+    ["it"] = "Server Finder Deluxe non prende alcuna informazione dal tuo account (nessun tracker su cosa giochi, cosa paghi con i tuoi robux, ecc.) e non contiene script dannosi. Questo progetto è open source per dimostrare che è sicuro da usare.\n\nServer Finder Deluxe si riserva il diritto di DMCA se utilizzi il nome Server Finder Deluxe per vendere o distribuire una versione dannosa sul mercato degli script.\n\nPer il resto, buon utilizzo ragazzi! Grazie per aver usato Server Finder Deluxe !!!",
+    ["de"] = "Server Finder Deluxe sammelt keinerlei Informationen von Ihrem Konto (keine Tracker für Spiele oder Robux-Ausgaben usw.) und enthält keine schädlichen Skripte. Dieses Projekt ist Open-Source, um zu beweisen, dass es sicher ist.\n\nServer Finder Deluxe behält sich das Recht auf DMCA vor, wenn Sie den Namen Server Finder Deluxe verwenden, um eine schädliche Version auf dem Skriptmarkt zu verkaufen oder zu verbreiten.\n\nViel Spaß, Leute! Vielen Dank für die Nutzung von Server Finder Deluxe!",
+    ["ar"] = "لا يأخذ Server Finder Deluxe أي معلومات من حسابك (لا توجد أدوات تتبع لما تلعبه، أو ما تدفعه مقابل الـ Robux الخاص بك، وما إلى ذلك) ولا يحتوي على أي برمجيات خبيثة. هذا المشروع مفتوح المصدر لإثبات أنه آمن للاستخدام.\n\nيحتفظ Server Finder Deluxe بالحق في تقديم شكوى DMCA إذا استخدمت اسم Server Finder Deluxe لبيع أو توزيع نسخة خبيثة في سوق السكربتات.\n\nبخلاف ذلك، استمتعوا بالاستخدام يا شباب! شكرًا لاستخدامكم Server Finder Deluxe !!!",
+    ["ja"] = "Server Finder Deluxeは、アカウントからいかなる情報（何をプレイしているか、Robuxで何を支払ったかのトラッカーなど）も取得せず、悪意のあるスクリプトも含んでいません。このプロジェクトは、安全に使用できることを証明するためにオープンソース化されています。\n\nスクリプト市場で悪意のあるバージョンを販売または配布するためにServer Finder Deluxeの名前を使用した場合、Server Finder DeluxeはDMCAの権利を留保します。\n\nそれでは、皆さん楽しんで使ってください！Server Finder Deluxeをご利用いただきありがとうございます！！！",
+    ["ru"] = "Server Finder Deluxe не собирает информацию о вашей учетной записи (нет трекеров активности, расходов Robux и т. д.) и не содержит вредоносных скриптов. Этот проект является открытым исходным кодом, чтобы доказать его безопасность.\n\nServer Finder Deluxe оставляет за собой право на подачу жалобы DMCA, если вы используете название Server Finder Deluxe для продажи или распространения вредоносной версии на рынке скриптов.\n\nВ остальном, приятного использования, ребята! Спасибо за использование Server Finder Deluxe !!!",
+    ["zh"] = "Server Finder Deluxe 不会从 your 账户中获取任何信息（没有关于您玩什么、用 Robux 支付什么的追踪器等），并且不包含任何恶意脚本。该项目是开源的，以证明其可以安全使用。\n\n如果您使用 Server Finder Deluxe 的名称在脚本市场上销售或分发恶意版本，Server Finder Deluxe 保留追究 DMCA 版权投诉的权利。\n\n除此之外，祝大家使用愉快！感谢您使用 Server Finder Deluxe !!!"
+}
+
+
+local userLanguage = "en"
+pcall(function()
+    local locale = LocalizationService.RobloxLocaleId:sub(1, 2):lower()
+    if translations[locale] then
+        userLanguage = locale
+    end
+end)
+
+infoLabel.Text = translations[userLanguage]
+
+
 
 local credit = Instance.new("TextLabel")
 credit.Parent = main
 credit.BackgroundTransparency = 1
 credit.Size = UDim2.new(0, 200, 0, 20)
-credit.Position = UDim2.new(1, -210, 1, -30)
+credit.Position = UDim2.new(1, -210, 1, -25)
 credit.Font = Enum.Font.Gotham
-credit.TextSize = 16
+credit.TextSize = 14
 credit.TextColor3 = Color3.fromRGB(170, 170, 170)
 credit.TextXAlignment = Enum.TextXAlignment.Right
 credit.Text = "By MaxproGlitcher"
@@ -149,154 +193,152 @@ local discord = Instance.new("TextLabel")
 discord.Parent = main
 discord.BackgroundTransparency = 1
 discord.Size = UDim2.new(0, 220, 0, 20)
-discord.Position = UDim2.new(0, 10, 1, -30) 
+discord.Position = UDim2.new(0, 10, 1, -25) 
 discord.Font = Enum.Font.Gotham
-discord.TextSize = 16
+discord.TextSize = 14
 discord.TextColor3 = Color3.fromRGB(170, 170, 170)
 discord.TextXAlignment = Enum.TextXAlignment.Left
 discord.Text = "Discord : maxproglitcher"
 
 local function GetEasterDate(year)
-	local A = math.floor(year/100)
-	local B = math.floor((13+8*A)/25)
-	local C = (15-B+A-math.floor(A/4))%30
-	local D = (4+A-math.floor(A/4))%7
-	local E = (19*(year%19)+C)%30
-	local F = (2*(year%4)+4*(year%7)+6*E+D)%7
-	local G = 22 + E + F
+    local A = math.floor(year/100)
+    local B = math.floor((13+8*A)/25)
+    local C = (15-B+A-math.floor(A/4))%30
+    local D = (4+A-math.floor(A/4))%7
+    local E = (19*(year%19)+C)%30
+    local F = (2*(year%4)+4*(year%7)+6*E+D)%7
+    local G = 22 + E + F
 
-	if E == 29 and F == 6 then
-		return 4, 19
-	elseif E == 28 and F == 6 then
-		return 4, 18
-	elseif G > 31 then
-		return 4, G-31
-	else
-		return 3, G
-	end
+    if E == 29 and F == 6 then
+        return 4, 19
+    elseif E == 28 and F == 6 then
+        return 4, 18
+    elseif G > 31 then
+        return 4, G-31
+    else
+        return 3, G
+    end
 end
-
 
 local isXmas, isHalloween, isNewYear, isEaster, isValentine = false, false, false, false, false
 
 local success, err = pcall(function()
-	local date = os.date("*t")
-	local emonth, eday = GetEasterDate(date.year)
-	isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
-	isHalloween = (date.month == 10 and date.day >= 23) or (date.month == 11 and date.day <= 1)
-	isNewYear = (date.month == 12 and date.day >= 30) or (date.month == 1 and date.day <= 2)
-	isValentine = (date.month == 2 and date.day == 14)
+    local date = os.date("*t")
+    local emonth, eday = GetEasterDate(date.year)
+    isXmas = date.month == 12 and date.day >= 15 and date.day <= 29
+    isHalloween = (date.month == 10 and date.day >= 23) or (date.month == 11 and date.day <= 1)
+    isNewYear = (date.month == 12 and date.day >= 30) or (date.month == 1 and date.day <= 2)
+    isValentine = (date.month == 2 and date.day == 14)
     isEaster = (date.month == emonth and date.day == eday) 
 end)
 
 if not success then
-	warn("Date system error for loading gui:", err)
+    warn("Date system error for loading gui:", err)
 end
 
 local function decorate(startEmoji, endEmoji)
-	title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
-	title.TextSize = 32
+    title.Text = startEmoji .. " Server Finder Deluxe " .. endEmoji
+    title.TextSize = 32
 end
 
 local function cycle(colors)
-	local i = 1
+    local i = 1
 
-	task.spawn(function()
-		while gui and gui.Parent do
-			local success, err = pcall(function()
-				local c = colors[i]
+    task.spawn(function()
+        while gui and gui.Parent do
+            local success, err = pcall(function()
+                local c = colors[i]
 
-				title.TextColor3 = c
-				versionLabel.TextColor3 = c
-				status.TextColor3 = c
-				credit.TextColor3 = c
-				percent.TextColor3 = c
-				bar.BackgroundColor3 = c
+                title.TextColor3 = c
+                versionLabel.TextColor3 = c
+                status.TextColor3 = c
+                credit.TextColor3 = c
+                percent.TextColor3 = c
+                bar.BackgroundColor3 = c
+                infoLabel.TextColor3 = c -- Fait aussi changer le texte explicatif de couleur selon l'événement !
 
-				if CopyGithubSFD then
-					CopyGithubSFD.TextColor3 = c
-					CopyGithubSFD.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-				end
+                if CopyGithubSFD then
+                    CopyGithubSFD.TextColor3 = c
+                    CopyGithubSFD.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+                end
 
-				if discord then
-					discord.TextColor3 = c
-				end
+                if discord then
+                    discord.TextColor3 = c
+                end
 
-				i = i % #colors + 1
-			end)
+                i = i % #colors + 1
+            end)
 
-			if not success then
-				warn("Cycle color error:", err)
-			end
+            if not success then
+                warn("Cycle color error:", err)
+            end
 
-			task.wait(0.5) 
-		end
-	end)
+            task.wait(0.5) 
+        end
+    end)
 end
 
 if isXmas then
-	decorate("🎄", "🎄")
-	cycle({
-		Color3.fromRGB(0,255,0), 
-		Color3.fromRGB(255,0,0), 
-		Color3.fromRGB(255,255,255)})
+    decorate("🎄", "🎄")
+    cycle({
+        Color3.fromRGB(0,255,0), 
+        Color3.fromRGB(255,0,0), 
+        Color3.fromRGB(255,255,255)})
 elseif isHalloween then
-	decorate("🎃", "🎃")
-	cycle({
-		Color3.fromRGB(0,0,0), 
-		Color3.fromRGB(255,165,0)})
+    decorate("🎃", "🎃")
+    cycle({
+        Color3.fromRGB(0,0,0), 
+        Color3.fromRGB(255,165,0)})
 elseif isNewYear then
-	decorate("🎉", "🎉")
-	cycle({
-		Color3.fromRGB(255,255,0), 
-		Color3.fromRGB(0,0,0)})
+    decorate("🎉", "🎉")
+    cycle({
+        Color3.fromRGB(255,255,0), 
+        Color3.fromRGB(0,0,0)})
 elseif isEaster then
-	decorate("🐰", "🐰")
-	cycle({
-		Color3.fromRGB(216,191,216),
-		Color3.fromRGB(255,182,193),
-		Color3.fromRGB(193,225,193),
-		Color3.fromRGB(173,216,230)
-	})
+    decorate("🐰", "🐰")
+    cycle({
+        Color3.fromRGB(216,191,216),
+        Color3.fromRGB(255,182,193),
+        Color3.fromRGB(193,225,193),
+        Color3.fromRGB(173,216,230)
+    })
 elseif isValentine then
-	decorate("💗", "💗")
-	cycle({
-		Color3.fromRGB(0,0,0), 
-		Color3.fromRGB(255,85,127)})
+    decorate("💗", "💗")
+    cycle({
+        Color3.fromRGB(0,0,0), 
+        Color3.fromRGB(255,85,127)})
 end
-
 
 local loading = true
 
 pcall(function()
-	task.spawn(function()
-		while loading and status and status.Parent do
-			for i = 1, 3 do
-				if not loading then break end
-				status.Text = "Loading" .. string.rep(".", i)
-				task.wait(0.4)
-			end
-			if not loading then break end
-			status.Text = "Loading"
-			task.wait(0.4)
-		end
-	end)
+    task.spawn(function()
+        while loading and status and status.Parent do
+            for i = 1, 3 do
+                if not loading then break end
+                status.Text = "Loading" .. string.rep(".", i)
+                task.wait(0.4)
+            end
+            if not loading then break end
+            status.Text = "Loading"
+            task.wait(0.4)
+        end
+    end)
 end)
 
-
 pcall(function()
-	local duration = 2
-	TweenService:Create(
-		bar,
-		TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-		{ Size = UDim2.new(1, 0, 1, 0) }
-	):Play()
+    local duration = 2
+    TweenService:Create(
+        bar,
+        TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+        { Size = UDim2.new(1, 0, 1, 0) }
+    ):Play()
 
-	for i = 0, 100 do
-		if not percent or not percent.Parent then break end
-		percent.Text = i .. "%"
-		task.wait(duration / 100)
-	end
+    for i = 0, 100 do
+        if not percent or not percent.Parent then break end
+        percent.Text = i .. "%"
+        task.wait(duration / 100)
+    end
 end)
 
 loading = false
@@ -305,11 +347,11 @@ status.Text = "Success"
 task.wait(0.30)
 
 if blur then
-	blur:Destroy()
+    blur:Destroy()
 end
 
 if gui then
-	gui:Destroy()
+    gui:Destroy()
 end
 
 --------------------------------------------------------------------------------------------------------------------
@@ -1450,7 +1492,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v7.0"
+versionLabel.Text = "v7.1"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1609,7 +1651,7 @@ end
 --------------------------------------------------------------------------------------------------------------------
 
 -- ════════════════════════════════════════
---    (Décoration pour le Nom du Gui)
+--               (Scroll Frame)
 -- ════════════════════════════════════════
 
 local scrollFrame = Instance.new("ScrollingFrame", mainFrame)
@@ -2884,7 +2926,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "7.0"
+local version = "7.1"
 
 local translations = {
 	["fr"] = {
