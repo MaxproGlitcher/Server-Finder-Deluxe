@@ -400,6 +400,7 @@ local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 local LocalizationService = game:GetService("LocalizationService")
 local TweenService = game:GetService("TweenService")
 local VRService = game:GetService("VRService")
