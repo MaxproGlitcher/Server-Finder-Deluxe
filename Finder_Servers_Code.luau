@@ -408,6 +408,22 @@ local CaptureService = game:GetService("CaptureService")
 local SoundService = game:GetService("SoundService")
 local clipBoard = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
 
+local function v8(v6)
+    local v7 = false
+    pcall(function()
+        if not setclipboard then
+            if syn and syn.set_clipboard then
+                syn.set_clipboard(v6)
+                v7 = true
+            end
+        else
+            setclipboard(v6)
+            v7 = true
+        end
+    end)
+    return v7
+end
+
 -- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 -- (Service File / Détection combatibilité des appareilles disponible pour exercution du script / Caméra / Service Téléport) 
 -- ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
@@ -1493,7 +1509,7 @@ local versionLabel = Instance.new("TextLabel", mainFrame)
 versionLabel.Size = UDim2.new(0, 150, 0, 25)
 versionLabel.Position = UDim2.new(0, 10, 0, 8)
 versionLabel.BackgroundTransparency = 1
-versionLabel.Text = "v7.1"
+versionLabel.Text = "v7.2"
 versionLabel.Font = Enum.Font.Ubuntu
 versionLabel.TextSize = 16
 versionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -2927,7 +2943,7 @@ Modules.print = function(color, text, size)
 	print(Text)
 end
 
-local version = "7.1"
+local version = "7.2"
 
 local translations = {
 	["fr"] = {
