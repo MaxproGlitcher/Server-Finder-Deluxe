@@ -407,6 +407,7 @@ local VRService = game:GetService("VRService")
 local CaptureService = game:GetService("CaptureService")
 local SoundService = game:GetService("SoundService")
 local clipBoard = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
+local setthreadidentity = setthreadidentity or (syn and syn.set_thread_identity) or syn_context_set or setthreadcontext
 
 local function v8(v6)
     local v7 = false
@@ -688,20 +689,24 @@ local screenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 
 -- Essayer de créer un parent vers un emplacement protégé
 pcall(function()
-	if gethui then
-		screenGui.Parent = gethui()
-	elseif syn and syn.protect_gui then
-		syn.protect_gui(screenGui)
-		screenGui.Parent = game:GetService("CoreGui")
-	else
-		screenGui.Parent = game:GetService("CoreGui")
-	end
+    if get_hidden_gui then
+        screenGui.Parent = get_hidden_gui()
+
+    elseif gethui then
+        screenGui.Parent = gethui()
+
+    elseif not is_sirhurt_closure and syn and syn.protect_gui then
+        syn.protect_gui(screenGui)
+        screenGui.Parent = game:GetService("CoreGui")
+
+    else
+        screenGui.Parent = game:GetService("CoreGui")
+    end
 end)
 
 if not screenGui.Parent then
-	screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 end
-
 
 local mainFrame = Instance.new("Frame", screenGui)
 mainFrame.Name = "SFD_ProtectGui" .. tostring(math.random(100, 999)) 
